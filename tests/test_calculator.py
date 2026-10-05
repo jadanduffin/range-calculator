@@ -48,7 +48,11 @@ def test_negative_numbers_are_understood():
 def test_bad_input_gives_error_message(text):
     result = run_js(f'calculate({json.dumps(text)}, "x1, y1", "100")')
     assert "error" in result
-    assert "A" in result["error"]
+    assert result["error"].startswith("Your position")
+
+
+def test_target_error_names_the_target():
+    assert run_js('calculate("1, 1", "x5", "100")')["error"].startswith("Target")
 
 
 def test_classic_3_4_5_triangle():

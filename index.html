@@ -17,7 +17,9 @@
 
 :root {
   --jd-ink: #08090a; --jd-ink-2: #0e0f11; --jd-ink-3: #131417;
-  --jd-fg: #f4f5f4; --jd-muted: #9a9da3; --jd-muted-2: #696c72;
+  --jd-fg: #f4f5f4; --jd-muted: #9a9da3;
+  /* Design system says #696c72; lifted here so small text passes 4.5:1 contrast. */
+  --jd-muted-2: #83868c;
   --jd-accent: #fb4b1d; --jd-accent-press: #e23c12; --jd-on-accent: #08090a;
   --jd-line: rgba(255, 255, 255, 0.09);
   --jd-sans: "Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -30,18 +32,20 @@
 html, body { margin: 0; background: var(--jd-ink); color: var(--jd-fg); }
 body { font: 400 16px/1.6 var(--jd-sans); -webkit-font-smoothing: antialiased; }
 
-main { max-width: 1040px; margin: 0 auto; padding: clamp(40px, 9vh, 96px) 16px 64px; }
+main { max-width: 1040px; margin: 0 auto; padding: clamp(24px, 5vh, 56px) 16px 64px; }
 .head { max-width: 480px; margin: 0 auto; }
 .guides { display: grid; gap: 56px; margin-top: 72px; }
 .col { display: grid; gap: 56px; align-content: start; }
 @media (min-width: 960px) {
+  .head { max-width: none; display: grid; grid-template-columns: 1fr 1fr; gap: 0 72px; align-items: start; }
+  .intro { padding-top: 12px; }
   .guides { grid-template-columns: 1fr 1fr; gap: 0 72px; margin-top: 96px; }
 }
 
-.mark { display: block; width: 36px; height: 36px; margin-bottom: 40px; }
+.mark { display: block; width: 32px; height: 32px; margin-bottom: 24px; }
 .eyebrow { font: 500 10px/1 var(--jd-mono); letter-spacing: .16em; text-transform: uppercase; color: var(--jd-accent); margin: 0 0 16px; }
 h1 { font-weight: 800; font-size: clamp(36px, 9vw, 48px); line-height: .92; letter-spacing: -.035em; margin: 0 0 18px; text-wrap: balance; }
-.lede { color: var(--jd-muted); font-size: 16px; margin: 0 0 36px; max-width: 40ch; }
+.lede { color: var(--jd-muted); font-size: 16px; margin: 0 0 28px; max-width: 40ch; }
 
 .card { background: var(--jd-ink-3); border: 1px solid var(--jd-line); border-radius: 14px; padding: 26px; box-shadow: var(--jd-shadow-card); }
 
@@ -49,7 +53,7 @@ h1 { font-weight: 800; font-size: clamp(36px, 9vw, 48px); line-height: .92; lett
 .weapon { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-bottom: 18px; margin-bottom: 20px; border-bottom: 1px solid var(--jd-line); }
 .weapon .lbl { margin: 0; }
 .chips { display: flex; gap: 6px; }
-.chip { font: 500 10.5px/1 var(--jd-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--jd-muted); background: transparent; border: 1px solid var(--jd-line); border-radius: 999px; padding: 8px 14px; cursor: pointer; transition: color .2s, border-color .2s, background .2s; }
+.chip { font: 500 10.5px/1 var(--jd-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--jd-muted); background: transparent; border: 1px solid var(--jd-line); border-radius: 999px; padding: 12px 16px; cursor: pointer; transition: color .2s, border-color .2s, background .2s; }
 .chip:hover { color: var(--jd-fg); }
 .chip[aria-pressed="true"] { color: var(--jd-fg); background: var(--jd-ink-2); border-color: rgba(255, 255, 255, .3); }
 .chip:focus-visible { outline: 2px solid var(--jd-fg); outline-offset: 2px; }
@@ -76,6 +80,12 @@ input:focus, input[aria-invalid="true"] { border-color: var(--jd-accent); }
 
 #result:empty { display: none; }
 #result { margin-top: 26px; padding-top: 22px; border-top: 1px solid var(--jd-line); }
+.readouts { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 4px 0 14px; }
+.readout .lbl { margin-bottom: 8px; }
+.big { font-size: clamp(40px, 11vw, 56px); line-height: .92; letter-spacing: -.035em; color: var(--jd-fg); }
+.big.rng { font-weight: 800; }
+.big.face { font-weight: 500; }
+.big small { font-size: .36em; font-weight: 400; letter-spacing: .02em; color: var(--jd-muted); margin-left: 6px; }
 .value { font-weight: 800; font-size: clamp(44px, 12vw, 60px); line-height: .92; letter-spacing: -.035em; margin: 12px 0 14px; }
 .value span { font-weight: 400; color: var(--jd-muted); font-size: .45em; letter-spacing: 0; margin-left: 6px; }
 .working { font: 400 11.5px/1.6 var(--jd-mono); letter-spacing: .04em; color: var(--jd-muted-2); }
@@ -121,10 +131,12 @@ footer { margin-top: 56px; padding-top: 14px; border-top: 1px solid var(--jd-lin
 <body>
 <main>
   <div class="head">
+  <div class="intro">
   <img class="mark in" src="data:image/png;base64,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" alt="JD">
   <p class="eyebrow in">01 · Wardogs range calculator</p>
   <h1 class="in">Range from your position to the target</h1>
-  <p class="lede in">Paste your map position and the target&#39;s, and this gives you the range and heading to set on the mortar or artillery sight.</p>
+  <p class="lede in">Paste your map position and the target&#39;s, and this gives you the RNG and Face numbers to set on the mortar or artillery sight.</p>
+  </div>
 
   <div class="card in">
     <div class="weapon">
@@ -159,8 +171,8 @@ footer { margin-top: 56px; padding-top: 14px; border-top: 1px solid var(--jd-lin
     <ol class="steps">
       <li><span class="num">01</span><div><h3>Mark your position</h3><p>Pick <strong>Mortar</strong> or <strong>Artillery</strong> above. Open the map and zoom all the way in on where you are. Right-click your position and choose <strong>Mark Coordinates</strong>. The coordinates appear in the chat box. Copy them with <kbd>Ctrl</kbd> <kbd>A</kbd> then <kbd>Ctrl</kbd> <kbd>C</kbd> and paste into A.</p></div></li>
       <li><span class="num">02</span><div><h3>Mark the target</h3><p>Do the same on the target and paste into B. Zoom in fully each time so the coordinates are as exact as possible.</p></div></li>
-      <li><span class="num">03</span><div><h3>Get the enemy range</h3><p>Press <strong>Enemy range</strong>. C is the straight line from your position to the target. The page treats the gap across the map and the gap up the map as the two short sides of a triangle, so A² + B² = C². One map unit is 100 meters, which turns C into meters.</p></div></li>
-      <li><span class="num">04</span><div><h3>Dial the range</h3><p>Zoom into the sight. Move the barrel with <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> for big moves and the mouse for small nudges until <strong>RNG</strong> reads the number shown above. The range ticks are coarse, so take the nearest one.</p></div></li>
+      <li><span class="num">03</span><div><h3>Get the enemy range</h3><p>Press <strong>Enemy range</strong>. The page shows two numbers to set: <strong>RNG</strong> and <strong>Face</strong>. RNG is C, the straight line from your position to the target. The page treats the gap across the map and the gap up the map as the two short sides of a triangle, so A² + B² = C². One map unit is 100 meters, which turns C into meters.</p></div></li>
+      <li><span class="num">04</span><div><h3>Dial the range</h3><p>Zoom into the sight. Move the barrel with <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> for big moves and the mouse for small nudges until <strong>RNG</strong> in the sight matches RNG on this page. The range ticks are coarse, so take the nearest one.</p></div></li>
       <li><span class="num">05</span><div><h3>Face the target and fire</h3><p>Turn until the compass along the top of the sight reads the <strong>Face</strong> number shown above. Watch where the first round lands and walk the next one in with a click or two.</p></div></li>
     </ol>
   </section>
@@ -179,7 +191,7 @@ footer { margin-top: 56px; padding-top: 14px; border-top: 1px solid var(--jd-lin
   <section class="guide in">
     <h2>03 · Reading the sight</h2>
     <dl class="terms">
-      <div><dt>RNG <span>Left side</span></dt><dd>Range: how far the shell will travel, in meters. Match it to the enemy range.</dd></div>
+      <div><dt>RNG <span>Left side</span></dt><dd>Range: how far the shell will travel, in meters. Match it to RNG on this page.</dd></div>
       <div><dt>MIL <span>Right side</span></dt><dd>How steeply the barrel is tilted, in mils. A mil is a small slice of angle; 6400 of them make a full circle. More mils means a steeper barrel and a shorter shot. It moves with RNG on its own, so you never set it yourself.</dd></div>
       <div><dt>Compass <span>Top</span></dt><dd>The direction the barrel faces, in degrees: 0 is north, 90 east, 180 south, 270 west. It matches the compass on your normal screen. Match it to the Face number.</dd></div>
     </dl>
@@ -192,7 +204,7 @@ footer { margin-top: 56px; padding-top: 14px; border-top: 1px solid var(--jd-lin
       <li><span class="num">01</span><div><h3>Bring a crew</h3><p>The SPH-2 has three seats: driver, gunner and a roof machine gunner. One person can run it alone, but it is slower.</p></div></li>
       <li><span class="num">02</span><div><h3>Park and buy shells</h3><p>Park on flat, stable ground. Press <kbd>B</kbd> and buy 155 mm high-explosive shells.</p></div></li>
       <li><span class="num">03</span><div><h3>Stabilize</h3><p>At your firing spot, scroll down to run the stabilization sequence. The status changes from <strong>Unstabilized</strong> to stabilized, and the crosshair stays put after each shot.</p></div></li>
-      <li><span class="num">04</span><div><h3>Aim</h3><p>Set the weapon above to <strong>Artillery</strong>, then aim as with the mortar: RNG to the enemy range, compass to Face. Under about 1,070 m only the high arc (a steep lob) reaches. Further out, the flatter and faster low arc works too.</p></div></li>
+      <li><span class="num">04</span><div><h3>Aim</h3><p>Set the weapon above to <strong>Artillery</strong>, then aim as with the mortar: match RNG and Face. Under about 1,070 m only the high arc (a steep lob) reaches. Further out, the flatter and faster low arc works too.</p></div></li>
       <li><span class="num">05</span><div><h3>Fire and reload</h3><p>Press <kbd>R</kbd> right after firing, then press the <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> prompts in the order shown. Watch the impact and walk the next shell in.</p></div></li>
     </ol>
     <p class="note">The SPH-2 unlocks at career level 90. No guide explains how to switch between low and high arc.</p>
@@ -217,9 +229,9 @@ function parsePoint(text) {
 // so the distance between the points is the long side C.
 function calculate(textA, textB, scaleText, weapon = "mortar") {
   const a = parsePoint(textA);
-  if (!a) return { error: "Point A needs exactly two numbers, like x98.42, y110.38", field: "a" };
+  if (!a) return { error: "Your position needs an x and a y, like x98.42, y110.38", field: "a" };
   const b = parsePoint(textB);
-  if (!b) return { error: "Point B needs exactly two numbers, like x94.53, y109.03", field: "b" };
+  if (!b) return { error: "Target needs an x and a y, like x94.53, y109.03", field: "b" };
   const scale = Number(String(scaleText).trim());
   if (String(scaleText).trim() === "" || !(scale > 0)) {
     return { error: "Meters per unit needs a number above 0, like 100", field: "scale" };
@@ -272,26 +284,25 @@ const inputs = ["a", "b", "scale"].map($);
 function show() {
   const r = calculate($("a").value, $("b").value, $("scale").value, weapon);
   const out = $("result");
-  inputs.forEach((el) => el.removeAttribute("aria-invalid"));
+  inputs.forEach((el) => { el.removeAttribute("aria-invalid"); el.removeAttribute("aria-describedby"); });
   out.classList.remove("show");
   void out.offsetWidth; // restart the rise animation
   out.classList.add("show");
   if (r.error) {
     $(r.field).setAttribute("aria-invalid", "true");
-    out.innerHTML = '<div class="error"></div>';
+    $(r.field).setAttribute("aria-describedby", "err");
+    out.innerHTML = '<div class="error" id="err"></div>';
     out.firstChild.textContent = r.error;
     return;
   }
-  const [num] = formatMeters(r.meters).split(" ");
   out.innerHTML =
-    '<div class="lbl">C · Range</div>' +
-    '<div class="value">' + num + '<span>m</span></div>' +
-    '<div class="dial">Dial RNG to <b>' + dialRange(r.meters) + '</b><span class="sep">·</span>Face <b>' +
-    Math.round(r.bearing) % 360 + '°</b> ' + compassPoint(r.bearing) +
-    (r.arc && !r.outOfRange ? '<span class="sep">·</span><b>' + r.arc + '</b>' : '') + '</div>' +
+    '<div class="readouts">' +
+      '<div class="readout"><div class="lbl">Set RNG</div><div class="big rng">' + dialRange(r.meters) + '<small>m</small></div></div>' +
+      '<div class="readout"><div class="lbl">Face</div><div class="big face">' + Math.round(r.bearing) % 360 + '°<small>' + compassPoint(r.bearing) + '</small></div></div>' +
+    '</div>' +
+    (r.arc && !r.outOfRange ? '<div class="dial"><b>' + r.arc + '</b></div>' : '') +
     (r.rangeNote ? '<div class="warn"></div>' : '') +
-    '<div class="working">√(' + round(r.dx) + '² + ' + round(r.dy) + '²) = ' +
-    round(r.distance) + ' units × ' + round(r.scale) + '</div>';
+    '<div class="working">' + formatMeters(r.meters) + ' = √(' + round(r.dx) + '² + ' + round(r.dy) + '²) × ' + round(r.scale) + '</div>';
   if (r.rangeNote) out.querySelector(".warn").textContent = r.rangeNote;
 }
 

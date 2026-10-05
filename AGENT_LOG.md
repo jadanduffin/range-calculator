@@ -51,3 +51,8 @@ Compare it with DEVLOG.md: where the two logs disagree is where you learn the mo
 ## 2026-10-05: Humanizer pass on page wording
 - Did: Applied blader/humanizer rules (not installed on the account; read from GitHub) to all page text. 9 edits: plainer intro, removed "tell me" and "I couldn't find" (my own voice leaking into a page other players read), dropped decorative bold, replaced an unsourced claim ("the closer you mark, the closer the shell lands") with a factual one, and made the untested compass caveat tell the reader what to do.
 - Unsure about: Step 03 uses A and B for both the points and the triangle's sides (A² + B² = C²). It's the user's formula, but could confuse readers. Mentioned to the user.
+
+## 2026-10-05: Readability pass (accessibility-review, design-critique, ux-copy)
+- Did: Result now shows two big readouts, SET RNG (412) and FACE (251° WSW); the 411.76 m distance moved into the small working line. Faint grey lifted from #696c72 to #83868c so all small text passes 4.5:1 (was 3.5–3.8). On screens 960 px and wider the title sits left and the calculator right, so the result ends at ~605 px on a 1440×900 screen (was 898). Errors use the box names ("Your position…", "Target…") and are linked to their box for screen readers. Weapon buttons 29 → 37 px tall. Terms unified: RNG for range, Face for direction.
+- Decided and why: Face uses weight 500, not 800: the design system allows one bold value per card, and Face is still untested in game. The grey change departs from the jadan-design token (#696c72) on this page only; the design system itself is unchanged.
+- Unsure about: Whether to update the design system's --jd-muted-2 everywhere. Asked the user.
