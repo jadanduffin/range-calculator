@@ -1,36 +1,32 @@
-# SPEC: <project name>
+# SPEC: Point Distance
 
 ## 1. The problem
-<!-- Who has this problem, and what do they do today instead? 2 or 3 sentences. -->
+I have two x/y points and need the straight-line distance between them (A² + B² = C²) without doing the math by hand.
 
 ## 2. The user
-<!-- One specific person. "Me" is a perfectly good answer. -->
+Me.
 
 ## 3. The job
-<!-- "When I ___, I want to ___, so I can ___." -->
+When I have two points, I want to paste them and press a button, so I can get C instantly.
 
 ## 4. MVP cut
-<!-- This release only. Ideas for later releases live in BACKLOG.md. -->
 | Must (MVP) | Should (if time) | Won't (moved to BACKLOG.md) |
 |---|---|---|
-| | | |
-
-Rule of thumb: if the Must column has more than 3 items, cut again.
+| Paste A and B, press Calculate, see C | Show the working | Third-corner / per-axis modes |
 
 ## 5. User flow
-<!-- Steps the user takes, in order. Sketch it on paper and describe it here. -->
-1.
-2.
-3.
+1. Open index.html in a browser.
+2. Paste Point A and Point B (e.g. `x98.42, y110.38`).
+3. Press Calculate C (or Enter) and read C.
 
 ## 6. Decision table
-<!-- For the trickiest logic in your tool: every combination of inputs and what should happen. -->
-| Condition A | Condition B | Expected result |
+| Point A text | Point B text | Expected result |
 |---|---|---|
-| | | |
+| two numbers | two numbers | C = √(Δx² + Δy²) |
+| not two numbers | anything | "Point A needs exactly two numbers…" |
+| two numbers | not two numbers | "Point B needs exactly two numbers…" |
 
 ## 7. Acceptance criteria
-<!-- Testable sentences. If you can't imagine a test for it, rewrite it. -->
-- [ ] AC1: Given ___, when ___, then ___.
-- [ ] AC2:
-- [ ] AC3:
+- [x] AC1: Given A = x98.42, y110.38 and B = x94.53, y109.03, when I press Calculate, then C ≈ 4.1176.
+- [x] AC2: Given points pasted as `x1, y2`, `1, 2`, `1 2` or `X: 1 Y: 2`, then they are all understood.
+- [x] AC3: Given a point without exactly two numbers, then a clear error names which point is wrong.

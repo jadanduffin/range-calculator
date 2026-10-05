@@ -13,6 +13,7 @@ When you plan the next release, move the chosen ideas into docs/SPEC.md
 | Idea | Why | Added | Target |
 |---|---|---|---|
 | e.g. Filter the page by tag | Find things faster | YYYY-MM-DD | v0.2 / later / ? |
+| Optional "third corner" and "per-axis" modes | Other readings of A²+B²=C² for points | 2026-10-05 | ? |
 
 ## Done or dropped
 <!-- Keep rejected ideas here with a reason, so they don't come back. -->

@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Point Distance</title>
+<style>
+  :root { --bg: #f6f5f2; --card: #ffffff; --ink: #1d1d1f; --muted: #6b6b70; --line: #d9d7d2; --accent: #2f5bd3; --bad: #b3261e; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #161618; --card: #222225; --ink: #f2f2f3; --muted: #a0a0a8; --line: #3a3a3f; --accent: #7d9cff; --bad: #ff8a80; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 440px; margin: 48px auto; padding: 0 16px; }
+  h1 { font-size: 1.4rem; margin: 0 0 4px; }
+  p.sub { margin: 0 0 24px; color: var(--muted); }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 20px; }
+  label { display: block; font-weight: 600; margin-bottom: 6px; }
+  input { width: 100%; padding: 10px 12px; font: inherit; color: inherit; background: transparent; border: 1px solid var(--line); border-radius: 8px; margin-bottom: 16px; }
+  input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  button { width: 100%; padding: 12px; font: inherit; font-weight: 600; color: #fff; background: var(--accent); border: 0; border-radius: 8px; cursor: pointer; }
+  #result { margin-top: 20px; min-height: 3em; }
+  .answer { font-size: 2rem; font-weight: 700; }
+  .working { color: var(--muted); font-size: 0.9rem; }
+  .error { color: var(--bad); font-weight: 600; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Point Distance</h1>
+  <p class="sub">Paste two points. C is the straight-line distance between them (A² + B² = C²).</p>
+  <div class="card">
+    <label for="a">Point A</label>
+    <input id="a" value="x98.42, y110.38" placeholder="x98.42, y110.38">
+    <label for="b">Point B</label>
+    <input id="b" value="x94.53, y109.03" placeholder="x94.53, y109.03">
+    <button id="go">Calculate C</button>
+    <div id="result" aria-live="polite"></div>
+  </div>
+</main>
+
+<script id="calculator">
+// Turn text like "x98.42, y110.38" into { x: 98.42, y: 110.38 }.
+// Returns null unless the text holds exactly two numbers.
+function parsePoint(text) {
+  const numbers = String(text).match(/-?\d+(?:\.\d+)?|-?\.\d+/g) || [];
+  if (numbers.length !== 2) return null;
+  return { x: Number(numbers[0]), y: Number(numbers[1]) };
+}
+
+// Pythagoras: the gaps across (x) and up (y) are the two short sides,
+// so the distance between the points is the long side C.
+function calculate(textA, textB) {
+  const a = parsePoint(textA);
+  if (!a) return { error: "Point A needs exactly two numbers, like x98.42, y110.38" };
+  const b = parsePoint(textB);
+  if (!b) return { error: "Point B needs exactly two numbers, like x94.53, y109.03" };
+  const dx = Math.abs(a.x - b.x);
+  const dy = Math.abs(a.y - b.y);
+  return { dx, dy, distance: Math.sqrt(dx * dx + dy * dy) };
+}
+</script>
+
+<script>
+const round = (n) => Number(n.toFixed(4)).toString();
+
+function show() {
+  const r = calculate(document.getElementById("a").value, document.getElementById("b").value);
+  const out = document.getElementById("result");
+  if (r.error) {
+    out.innerHTML = '<div class="error"></div>';
+    out.firstChild.textContent = r.error;
+    return;
+  }
+  out.innerHTML =
+    '<div class="answer">C = ' + round(r.distance) + '</div>' +
+    '<div class="working">√(' + round(r.dx) + '² + ' + round(r.dy) + '²)</div>';
+}
+
+document.getElementById("go").addEventListener("click", show);
+document.querySelectorAll("input").forEach((el) =>
+  el.addEventListener("keydown", (e) => { if (e.key === "Enter") show(); })
+);
+</script>
+</body>
+</html>
