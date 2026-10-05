@@ -64,3 +64,7 @@ Compare it with DEVLOG.md: where the two logs disagree is where you learn the mo
 
 ## 2026-10-05: Removed the meters-per-unit box
 - Did: Removed the box; the page always uses 100 m per map unit (confirmed by guides). calculate() keeps its scale input so existing tests still cover the maths. Intro now says "Enter" instead of "Paste" so it fits phones.
+
+## 2026-10-05: Published as a private link
+- Did: Renamed the page title to "Wardogs Range Calculator", set color-scheme: dark, and published a copy without the outer html/head/body wrapper (the publishing service adds its own) at https://claude.ai/artifact/EN8FSC17mcHVnXy2E1iZm9 (private). index.html keeps its wrapper so it still opens by double-click.
+- Unsure about: The publish copy lives in the session scratchpad; to republish after future edits, rebuild it from index.html with the same steps.
