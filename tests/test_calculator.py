@@ -77,3 +77,25 @@ def test_bad_scale_gives_error_message(scale):
 def test_rng_to_dial_is_whole_meters():
     assert run_js("dialRange(411.7596)") == 412
     assert run_js("dialRange(411.4)") == 411
+
+
+# AC7: the page gives the compass direction from gun to target (0 = north, 90 = east; Y counts north).
+@pytest.mark.parametrize(
+    "target, bearing",
+    [("0, 10", 0), ("10, 0", 90), ("0, -10", 180), ("-10, 0", 270), ("5, 5", 45)],
+)
+def test_bearing_points_the_right_way(target, bearing):
+    assert run_js(f'calculate("0, 0", {json.dumps(target)}, "100")')["bearing"] == pytest.approx(bearing)
+
+
+def test_example_bearing():
+    result = run_js('calculate("x98.42, y110.38", "x94.53, y109.03", "100")')
+    assert result["bearing"] == pytest.approx(250.86, abs=0.01)
+    assert run_js("compassPoint(250.86)") == "WSW"
+    assert run_js("compassPoint(359)") == "N"
+
+
+# AC8: ranges past the L81's last tick are flagged.
+def test_out_of_range_is_flagged():
+    assert run_js('calculate("0, 0", "6, 0", "100")')["outOfRange"] is False
+    assert run_js('calculate("0, 0", "6.9, 0", "100")')["outOfRange"] is True

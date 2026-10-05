@@ -32,4 +32,6 @@ When I have two points, I want to paste them and press a button, so I can get C 
 - [x] AC3: Given a point without exactly two numbers, then a clear error names which point is wrong.
 - [x] AC4: Given a meters-per-unit scale (default 100), then C is shown in meters to two decimals (example: 411.76 m).
 - [x] AC6: Given a result, then the page shows the whole-meter RNG to dial (example: 412).
+- [x] AC7: Given a result, then the page shows the compass bearing to face (0 = north, Y counts north) and its compass point (example: 251° WSW).
+- [x] AC8: Given a range past 684 m, then a warning says it is beyond the L81's last range tick.
 - [x] AC5: Given a blank, zero, negative or non-number scale, then a clear error asks for a number above 0.

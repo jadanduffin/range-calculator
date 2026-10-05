@@ -29,3 +29,8 @@ Compare it with DEVLOG.md: where the two logs disagree is where you learn the mo
 - Did: Researched Wardogs mortar aiming. Confirmed 1 map unit = 100 m, RNG = range in meters (left of sight), MIL = barrel elevation in mils (right; more mils = shorter shot; follows RNG automatically). Rewrote the page: gun/target labels, a 5-step how-to, a sight glossary, L81 range and hill caveats, and a "Dial RNG to 412" line (dialRange, tested).
 - Decided and why: Direction and an out-of-range warning are useful but not asked for, so they went to BACKLOG.md.
 - Unsure about: Facts come from community guides (sportskeeda, gamerant, wardogstips.wiki, wardogshub.uk), not official docs; L81 max range is quoted as ~684–700 m and is disputed.
+
+## 2026-10-05: Direction and out-of-range warning
+- Did: Result now reads "Dial RNG to 412 · Face 251° WSW". Ranges over 684 m show an orange-dot warning. Step 05 and the compass entry explain using the Face number. 7 new tests.
+- Decided and why: Bearing uses Y = north (community guides). 684 m is the last range tick in the walkthrough guide, so it is the safe cut-off.
+- Unsure about: Y-north is unconfirmed in the game itself; the page asks the user to report if the first shot lands on the opposite side.
