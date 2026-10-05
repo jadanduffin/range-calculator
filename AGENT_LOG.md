@@ -56,3 +56,8 @@ Compare it with DEVLOG.md: where the two logs disagree is where you learn the mo
 - Did: Result now shows two big readouts, SET RNG (412) and FACE (251° WSW); the 411.76 m distance moved into the small working line. Faint grey lifted from #696c72 to #83868c so all small text passes 4.5:1 (was 3.5–3.8). On screens 960 px and wider the title sits left and the calculator right, so the result ends at ~605 px on a 1440×900 screen (was 898). Errors use the box names ("Your position…", "Target…") and are linked to their box for screen readers. Weapon buttons 29 → 37 px tall. Terms unified: RNG for range, Face for direction.
 - Decided and why: Face uses weight 500, not 800: the design system allows one bold value per card, and Face is still untested in game. The grey change departs from the jadan-design token (#696c72) on this page only; the design system itself is unchanged.
 - Unsure about: Whether to update the design system's --jd-muted-2 everywhere. Asked the user.
+
+## 2026-10-05: Phone X/Y boxes
+- Did: Under 640 px wide, each point shows two boxes (X, Y) with the number keypad instead of one paste box. Enter jumps box to box and calculates at the end. Comma decimals accepted (joinPoint, tested). Phone and PC boxes stay in sync. Phone errors say "needs a number in both X and Y" and flag only the empty box. Step 01 mentions the phone boxes. PC unchanged.
+- Decided and why: Phone boxes use 16 px text so iPhones don't zoom in when you tap them.
+- Unsure about: The iPhone number keypad has no minus key, so negative coordinates can't be typed on iPhone. Wardogs coordinates seen so far are all positive.

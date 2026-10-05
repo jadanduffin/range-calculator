@@ -67,6 +67,16 @@ input:focus, input[aria-invalid="true"] { border-color: var(--jd-accent); }
 .x:hover { background: var(--jd-accent); color: var(--jd-on-accent); }
 .wrap.has .x { display: block; }
 
+/* Phones: separate X and Y boxes with the number keypad, instead of one paste box. */
+.pair { display: none; }
+.cell { position: relative; }
+.axis { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font: 500 11px var(--jd-mono); letter-spacing: .1em; color: var(--jd-muted-2); pointer-events: none; }
+.pair input { padding: 12px 12px 12px 34px; font: 400 16px/1.3 var(--jd-mono); }
+@media (max-width: 640px) {
+  .field > .wrap { display: none; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+}
+
 .scale { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 18px; margin: 4px 0 24px; border-top: 1px solid var(--jd-line); }
 .scale .lbl { margin: 0; }
 .scale .wrap { width: 132px; }
@@ -149,10 +159,12 @@ footer { margin-top: 56px; padding-top: 14px; border-top: 1px solid var(--jd-lin
     <div class="field">
       <label class="lbl" for="a"><span class="n">A</span> Your position · x, y</label>
       <div class="wrap"><input id="a" value="x98.42, y110.38" placeholder="x98.42, y110.38" autocomplete="off" spellcheck="false"><button class="x" type="button" aria-label="Clear your position">×</button></div>
+      <div class="pair"><div class="cell"><span class="axis">X</span><input id="ax" value="98.42" inputmode="decimal" enterkeyhint="next" autocomplete="off" aria-label="Your position X"></div><div class="cell"><span class="axis">Y</span><input id="ay" value="110.38" inputmode="decimal" enterkeyhint="next" autocomplete="off" aria-label="Your position Y"></div></div>
     </div>
     <div class="field">
       <label class="lbl" for="b"><span class="n">B</span> Target · x, y</label>
       <div class="wrap"><input id="b" value="x94.53, y109.03" placeholder="x94.53, y109.03" autocomplete="off" spellcheck="false"><button class="x" type="button" aria-label="Clear the target position">×</button></div>
+      <div class="pair"><div class="cell"><span class="axis">X</span><input id="bx" value="94.53" inputmode="decimal" enterkeyhint="next" autocomplete="off" aria-label="Target X"></div><div class="cell"><span class="axis">Y</span><input id="by" value="109.03" inputmode="decimal" enterkeyhint="go" autocomplete="off" aria-label="Target Y"></div></div>
     </div>
     <div class="scale">
       <label class="lbl" for="scale">Meters per unit</label>
@@ -169,7 +181,7 @@ footer { margin-top: 56px; padding-top: 14px; border-top: 1px solid var(--jd-lin
   <section class="guide in">
     <h2>02 · How to use it</h2>
     <ol class="steps">
-      <li><span class="num">01</span><div><h3>Mark your position</h3><p>Pick <strong>Mortar</strong> or <strong>Artillery</strong> above. Open the map and zoom all the way in on where you are. Right-click your position and choose <strong>Mark Coordinates</strong>. The coordinates appear in the chat box. Copy them with <kbd>Ctrl</kbd> <kbd>A</kbd> then <kbd>Ctrl</kbd> <kbd>C</kbd> and paste into A.</p></div></li>
+      <li><span class="num">01</span><div><h3>Mark your position</h3><p>Pick <strong>Mortar</strong> or <strong>Artillery</strong> above. Open the map and zoom all the way in on where you are. Right-click your position and choose <strong>Mark Coordinates</strong>. The coordinates appear in the chat box. Copy them with <kbd>Ctrl</kbd> <kbd>A</kbd> then <kbd>Ctrl</kbd> <kbd>C</kbd> and paste into A. On a phone, type the two numbers into the X and Y boxes instead.</p></div></li>
       <li><span class="num">02</span><div><h3>Mark the target</h3><p>Do the same on the target and paste into B. Zoom in fully each time so the coordinates are as exact as possible.</p></div></li>
       <li><span class="num">03</span><div><h3>Get the enemy range</h3><p>Press <strong>Enemy range</strong>. The page shows two numbers to set: <strong>RNG</strong> and <strong>Face</strong>. RNG is C, the straight line from your position to the target. The page treats the gap across the map and the gap up the map as the two short sides of a triangle, so A² + B² = C². One map unit is 100 meters, which turns C into meters.</p></div></li>
       <li><span class="num">04</span><div><h3>Dial the range</h3><p>Zoom into the sight. Move the barrel with <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> for big moves and the mouse for small nudges until <strong>RNG</strong> in the sight matches RNG on this page. The range ticks are coarse, so take the nearest one.</p></div></li>
@@ -270,6 +282,14 @@ function dialRange(meters) {
   return Math.round(meters);
 }
 
+// Phone boxes: ("98.42", "110.38") -> "98.42, 110.38". A comma typed as the
+// decimal point is turned into a dot. Empty if either box is empty.
+function joinPoint(x, y) {
+  const clean = (v) => String(v).trim().replace(",", ".");
+  x = clean(x); y = clean(y);
+  return x && y ? x + ", " + y : "";
+}
+
 // 411.7596 -> "411.76 m"
 function formatMeters(meters) {
   return meters.toFixed(2) + " m";
@@ -280,19 +300,53 @@ function formatMeters(meters) {
 const round = (n) => Number(n.toFixed(4)).toString();
 const $ = (id) => document.getElementById(id);
 const inputs = ["a", "b", "scale"].map($);
+const pairInputs = ["ax", "ay", "bx", "by"].map($);
+const phone = window.matchMedia("(max-width: 640px)");
+
+// On phones the X and Y boxes are what you see; on a PC it is the single box.
+function readPoint(id) {
+  return phone.matches ? joinPoint($(id + "x").value, $(id + "y").value) : $(id).value;
+}
+
+// Keep both versions of each point in step, so turning the phone or resizing never loses input.
+["a", "b"].forEach((id) => {
+  const fromPair = () => {
+    const joined = joinPoint($(id + "x").value, $(id + "y").value);
+    const pt = parsePoint(joined);
+    $(id).value = pt ? "x" + pt.x + ", y" + pt.y : joined;
+    $(id).dispatchEvent(new Event("sync"));
+  };
+  $(id + "x").addEventListener("input", fromPair);
+  $(id + "y").addEventListener("input", fromPair);
+  $(id).addEventListener("input", () => {
+    const pt = parsePoint($(id).value);
+    if (pt) { $(id + "x").value = pt.x; $(id + "y").value = pt.y; }
+  });
+});
+pairInputs.forEach((el, i) =>
+  el.addEventListener("keydown", (e) => {
+    if (e.key !== "Enter") return;
+    e.preventDefault();
+    if (i < pairInputs.length - 1) pairInputs[i + 1].focus(); else { el.blur(); show(); }
+  })
+);
 
 function show() {
-  const r = calculate($("a").value, $("b").value, $("scale").value, weapon);
+  const r = calculate(readPoint("a"), readPoint("b"), $("scale").value, weapon);
   const out = $("result");
-  inputs.forEach((el) => { el.removeAttribute("aria-invalid"); el.removeAttribute("aria-describedby"); });
+  inputs.concat(pairInputs).forEach((el) => { el.removeAttribute("aria-invalid"); el.removeAttribute("aria-describedby"); });
   out.classList.remove("show");
   void out.offsetWidth; // restart the rise animation
   out.classList.add("show");
   if (r.error) {
-    $(r.field).setAttribute("aria-invalid", "true");
-    $(r.field).setAttribute("aria-describedby", "err");
+    const pair = [$(r.field + "x"), $(r.field + "y")].filter(Boolean);
+    const empty = pair.filter((el) => el.value.trim() === "");
+    const bad = phone.matches && r.field !== "scale" ? (empty.length ? empty : pair) : [$(r.field)];
+    bad.forEach((el) => { el.setAttribute("aria-invalid", "true"); el.setAttribute("aria-describedby", "err"); });
     out.innerHTML = '<div class="error" id="err"></div>';
-    out.firstChild.textContent = r.error;
+    out.firstChild.textContent = phone.matches && r.field !== "scale"
+      ? (r.field === "a" ? "Your position" : "Target") + " needs a number in both X and Y."
+      : r.error;
     return;
   }
   out.innerHTML =
@@ -321,6 +375,7 @@ inputs.forEach((el) => {
   const wrap = el.parentElement;
   const sync = () => wrap.classList.toggle("has", el.value !== "");
   el.addEventListener("input", sync);
+  el.addEventListener("sync", sync);
   sync();
   const x = wrap.querySelector(".x");
   if (x) x.addEventListener("click", () => { el.value = ""; sync(); el.focus(); });

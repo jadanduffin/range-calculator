@@ -136,3 +136,19 @@ def test_artillery_arc_advice():
     assert at(900, "artillery")["arc"] == "High arc only"
     assert at(1500, "artillery")["arc"] == "Low or high arc"
     assert at(400, "mortar")["arc"] is None
+
+
+# AC11: on phones, separate X and Y boxes are joined into one point.
+def test_phone_boxes_join_into_a_point():
+    assert run_js('joinPoint("98.42", "110.38")') == "98.42, 110.38"
+    assert run_js('parsePoint(joinPoint(" 98.42 ", "110.38"))') == {"x": 98.42, "y": 110.38}
+
+
+def test_phone_boxes_accept_a_comma_as_decimal_point():
+    # Some phone keypads only offer a comma.
+    assert run_js('parsePoint(joinPoint("98,42", "110,38"))') == {"x": 98.42, "y": 110.38}
+
+
+def test_phone_boxes_left_empty_give_an_error():
+    assert run_js('joinPoint("98.42", "")') == ""
+    assert "error" in run_js('calculate(joinPoint("", ""), "1, 1", "100")')

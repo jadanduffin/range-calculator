@@ -36,4 +36,5 @@ When I have two points, I want to paste them and press a button, so I can get C 
 - [x] AC8: Given a range past 684 m, then a warning says it is beyond the L81's last range tick.
 - [x] AC9: Given the weapon switch (Mortar default, or Artillery), then range warnings use that weapon's reach (L81 132–684 m, SPH-2 745–2,660 m) and say too close or too far.
 - [x] AC10: Given Artillery, then the page says whether only the high arc reaches (under ~1,070 m).
+- [x] AC11: Given a phone (under 640 px wide), then each point has separate X and Y boxes with the number keypad; Enter moves to the next box and calculates after the last; a comma decimal is accepted; an empty box is flagged.
 - [x] AC5: Given a blank, zero, negative or non-number scale, then a clear error asks for a number above 0.
