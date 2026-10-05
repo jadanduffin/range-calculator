@@ -43,3 +43,7 @@ Compare it with DEVLOG.md: where the two logs disagree is where you learn the mo
 ## 2026-10-05: Aiming feedback
 - Did: No page change. User clarified aiming: put the target on the vertical crosshair line, and above or below center is fine. User chose to keep step order and test the compass Face number tomorrow; the visual-check rewrite is parked in BACKLOG.md.
 - Unsure about: Whether Y counts north (drives the Face number). Waiting on the user's in-game test.
+
+## 2026-10-05: "Your gun" → "Your position"
+- Did: Replaced every "gun" on the page with "your position" (title, intro, A label, step 01, step 03). Crew wording ("gunner") left as is.
+- Decided and why: The user had asked for this in the previous message and I misread it as a step-order request. Owned the mistake and fixed it.
