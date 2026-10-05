@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+.env
+.DS_Store
+
+# Claude: personal files, never shared
+.claude/settings.local.json
+CLAUDE.local.md
