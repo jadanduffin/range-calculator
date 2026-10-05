@@ -30,7 +30,13 @@
 html, body { margin: 0; background: var(--jd-ink); color: var(--jd-fg); }
 body { font: 400 16px/1.6 var(--jd-sans); -webkit-font-smoothing: antialiased; }
 
-main { max-width: 480px; margin: 0 auto; padding: clamp(40px, 9vh, 96px) 16px 64px; }
+main { max-width: 1040px; margin: 0 auto; padding: clamp(40px, 9vh, 96px) 16px 64px; }
+.head { max-width: 480px; margin: 0 auto; }
+.guides { display: grid; gap: 56px; margin-top: 72px; }
+.col { display: grid; gap: 56px; align-content: start; }
+@media (min-width: 960px) {
+  .guides { grid-template-columns: 1fr 1fr; gap: 0 72px; margin-top: 96px; }
+}
 
 .mark { display: block; width: 36px; height: 36px; margin-bottom: 40px; }
 .eyebrow { font: 500 10px/1 var(--jd-mono); letter-spacing: .16em; text-transform: uppercase; color: var(--jd-accent); margin: 0 0 16px; }
@@ -40,6 +46,13 @@ h1 { font-weight: 800; font-size: clamp(36px, 9vw, 48px); line-height: .92; lett
 .card { background: var(--jd-ink-3); border: 1px solid var(--jd-line); border-radius: 14px; padding: 26px; box-shadow: var(--jd-shadow-card); }
 
 .field { margin-bottom: 20px; }
+.weapon { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-bottom: 18px; margin-bottom: 20px; border-bottom: 1px solid var(--jd-line); }
+.weapon .lbl { margin: 0; }
+.chips { display: flex; gap: 6px; }
+.chip { font: 500 10.5px/1 var(--jd-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--jd-muted); background: transparent; border: 1px solid var(--jd-line); border-radius: 999px; padding: 8px 14px; cursor: pointer; transition: color .2s, border-color .2s, background .2s; }
+.chip:hover { color: var(--jd-fg); }
+.chip[aria-pressed="true"] { color: var(--jd-fg); background: var(--jd-ink-2); border-color: rgba(255, 255, 255, .3); }
+.chip:focus-visible { outline: 2px solid var(--jd-fg); outline-offset: 2px; }
 .lbl { display: flex; align-items: baseline; gap: 10px; font: 500 10.5px/1 var(--jd-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--jd-muted-2); margin-bottom: 10px; }
 .lbl .n { color: var(--jd-muted); }
 .wrap { position: relative; }
@@ -74,10 +87,8 @@ input:focus, input[aria-invalid="true"] { border-color: var(--jd-accent); }
 .warn { display: flex; gap: 10px; align-items: baseline; margin: 4px 0 10px; color: var(--jd-muted); font-size: 14px; }
 .warn::before { content: ""; flex: none; width: 7px; height: 7px; border-radius: 50%; background: var(--jd-accent); transform: translateY(-1px); }
 
-.guide { margin-top: 64px; }
 .guide h2 { display: flex; align-items: center; gap: 12px; font: 500 12px/1 var(--jd-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--jd-muted-2); margin: 0 0 22px; }
 .guide h2::after { content: ""; flex: 1; height: 1px; background: var(--jd-line); }
-.guide + .guide { margin-top: 48px; }
 .steps { list-style: none; margin: 0; padding: 0; }
 .steps li { display: grid; grid-template-columns: 34px 1fr; gap: 0 10px; padding: 14px 0; border-top: 1px solid var(--jd-line); }
 .steps li:first-child { border-top: 0; padding-top: 0; }
@@ -109,12 +120,20 @@ footer { margin-top: 56px; padding-top: 14px; border-top: 1px solid var(--jd-lin
 </head>
 <body>
 <main>
+  <div class="head">
   <img class="mark in" src="data:image/png;base64,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" alt="JD">
-  <p class="eyebrow in">01 · Wardogs mortar range</p>
+  <p class="eyebrow in">01 · Wardogs range calculator</p>
   <h1 class="in">Range from your gun to the target</h1>
-  <p class="lede in">Mark your gun and the target on the map, paste both coordinates here, and get the RNG to dial into the mortar sight.</p>
+  <p class="lede in">Mark your gun and the target on the map, paste both coordinates here, and get the RNG and heading to dial into the mortar or artillery sight.</p>
 
   <div class="card in">
+    <div class="weapon">
+      <span class="lbl" id="weapon-lbl">Weapon</span>
+      <div class="chips" role="group" aria-labelledby="weapon-lbl">
+        <button class="chip" type="button" data-weapon="mortar" aria-pressed="true">Mortar</button>
+        <button class="chip" type="button" data-weapon="artillery" aria-pressed="false">Artillery</button>
+      </div>
+    </div>
     <div class="field">
       <label class="lbl" for="a"><span class="n">A</span> Your gun · x, y</label>
       <div class="wrap"><input id="a" value="x98.42, y110.38" placeholder="x98.42, y110.38" autocomplete="off" spellcheck="false"><button class="x" type="button" aria-label="Clear your gun position">×</button></div>
@@ -127,32 +146,62 @@ footer { margin-top: 56px; padding-top: 14px; border-top: 1px solid var(--jd-lin
       <label class="lbl" for="scale">Meters per unit</label>
       <div class="wrap"><input id="scale" value="100" inputmode="decimal" autocomplete="off"><span class="unit">M</span></div>
     </div>
-    <button class="go" id="go" type="button">Calculate C <span aria-hidden="true">→</span></button>
+    <button class="go" id="go" type="button">Enemy range <span aria-hidden="true">→</span></button>
     <div id="result" aria-live="polite"></div>
   </div>
+  </div>
+
+  <div class="guides">
+  <div class="col">
 
   <section class="guide in">
     <h2>02 · How to use it</h2>
     <ol class="steps">
-      <li><span class="num">01</span><div><h3>Mark your gun</h3><p>Open the map and zoom all the way in on your mortar. Right-click it and choose <strong>Mark Coordinates</strong>. The coordinates appear in the chat box. Copy them with <kbd>Ctrl</kbd> <kbd>A</kbd> then <kbd>Ctrl</kbd> <kbd>C</kbd> and paste into A.</p></div></li>
+      <li><span class="num">01</span><div><h3>Mark your gun</h3><p>Pick <strong>Mortar</strong> or <strong>Artillery</strong> above. Open the map and zoom all the way in on your gun. Right-click it and choose <strong>Mark Coordinates</strong>. The coordinates appear in the chat box. Copy them with <kbd>Ctrl</kbd> <kbd>A</kbd> then <kbd>Ctrl</kbd> <kbd>C</kbd> and paste into A.</p></div></li>
       <li><span class="num">02</span><div><h3>Mark the target</h3><p>Do the same on the target and paste into B. Zoom in fully each time; the closer you mark, the closer the shell lands.</p></div></li>
-      <li><span class="num">03</span><div><h3>Calculate</h3><p>C is the straight line from gun to target. The page treats the gap across the map and the gap up the map as the two short sides of a triangle, so A² + B² = C². One map unit is 100 meters, which turns C into meters.</p></div></li>
-      <li><span class="num">04</span><div><h3>Dial the range</h3><p>Zoom into the mortar sight. Move the barrel with <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> for big moves and the mouse for small nudges until <strong>RNG</strong> reads the number shown above. The range ticks are coarse, so take the nearest one.</p></div></li>
+      <li><span class="num">03</span><div><h3>Get the enemy range</h3><p>Press <strong>Enemy range</strong>. C is the straight line from gun to target. The page treats the gap across the map and the gap up the map as the two short sides of a triangle, so A² + B² = C². One map unit is 100 meters, which turns C into meters.</p></div></li>
+      <li><span class="num">04</span><div><h3>Dial the range</h3><p>Zoom into the sight. Move the barrel with <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> for big moves and the mouse for small nudges until <strong>RNG</strong> reads the number shown above. The range ticks are coarse, so take the nearest one.</p></div></li>
       <li><span class="num">05</span><div><h3>Face the target and fire</h3><p>Turn until the compass along the top of the sight reads the <strong>Face</strong> number shown above. Watch where the first round lands and walk the next one in with a click or two.</p></div></li>
     </ol>
   </section>
 
   <section class="guide in">
-    <h2>03 · Reading the mortar sight</h2>
+    <h2>04 · Reach</h2>
+    <dl class="terms">
+      <div><dt>Mortar <span>L81</span></dt><dd>About 130 to 684 m.</dd></div>
+      <div><dt>Artillery <span>SPH-2</span></dt><dd>About 745 to 2,660 m. High arc only under about 1,070 m.</dd></div>
+    </dl>
+    <p class="note">These come from player guides; there are no official figures. Hills are not counted: a target higher or lower than you will land a little off, so be ready to adjust.</p>
+  </section>
+  </div>
+
+  <div class="col">
+  <section class="guide in">
+    <h2>03 · Reading the sight</h2>
     <dl class="terms">
       <div><dt>RNG <span>Left side</span></dt><dd>Range. How far the shell will travel, in meters. <strong>This is the number you match to C.</strong></dd></div>
       <div><dt>MIL <span>Right side</span></dt><dd>How steeply the barrel is tilted, in mils. A mil is a small slice of angle; 6400 of them make a full circle. More mils means a steeper barrel and a shorter shot. It moves with RNG on its own, so you never set it yourself.</dd></div>
       <div><dt>Compass <span>Top</span></dt><dd>The direction the barrel faces, in degrees: 0 is north, 90 east, 180 south, 270 west. It matches the compass on your normal screen. <strong>This is the number you match to Face.</strong></dd></div>
     </dl>
-    <p class="note">Direction assumes Y counts north on the map, as the community guides say. If your first shot lands on the opposite side, tell me. The L81 mortar reaches about 684 to 700 meters. Hills are not counted: a target higher or lower than you will land a little off, so be ready to adjust.</p>
+    <p class="note">Mortar and artillery sights read the same way. Direction assumes Y counts north on the map, as the community guides say. If your first shot lands on the opposite side, tell me. </p>
   </section>
 
-  <footer class="in">1 map unit = 100 m · A² + B² = C² · Enter also calculates</footer>
+  <section class="guide in">
+    <h2>05 · Using the artillery (SPH-2)</h2>
+    <ol class="steps">
+      <li><span class="num">01</span><div><h3>Bring a crew</h3><p>The SPH-2 has three seats: driver, gunner and a roof machine gunner. One person can run it alone, but it is slower.</p></div></li>
+      <li><span class="num">02</span><div><h3>Park and buy shells</h3><p>Park on flat, stable ground. Press <kbd>B</kbd> and buy <strong>155 mm high-explosive shells</strong>.</p></div></li>
+      <li><span class="num">03</span><div><h3>Stabilize</h3><p>At your firing spot, scroll down to run the stabilization sequence. The status changes from <strong>Unstabilized</strong> to stabilized, and the crosshair stays put after each shot.</p></div></li>
+      <li><span class="num">04</span><div><h3>Aim</h3><p>Set the weapon above to <strong>Artillery</strong>, then aim as with the mortar: RNG to the enemy range, compass to Face. Under about 1,070 m only the <strong>high arc</strong> (a steep lob) reaches; further out the flatter, faster <strong>low arc</strong> works too.</p></div></li>
+      <li><span class="num">05</span><div><h3>Fire and reload</h3><p>Press <kbd>R</kbd> right after firing, then press the <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> prompts in the order shown. Watch the impact and walk the next shell in.</p></div></li>
+    </ol>
+    <p class="note">The SPH-2 unlocks at career level 90. I couldn't find how the game switches between low and high arc.</p>
+  </section>
+
+  </div>
+  </div>
+
+  <footer class="in">1 map unit = 100 m · A² + B² = C² · Enter also works</footer>
 </main>
 
 <script id="calculator">
@@ -166,7 +215,7 @@ function parsePoint(text) {
 
 // Pythagoras: the gaps across (x) and up (y) are the two short sides,
 // so the distance between the points is the long side C.
-function calculate(textA, textB, scaleText) {
+function calculate(textA, textB, scaleText, weapon = "mortar") {
   const a = parsePoint(textA);
   if (!a) return { error: "Point A needs exactly two numbers, like x98.42, y110.38", field: "a" };
   const b = parsePoint(textB);
@@ -183,11 +232,20 @@ function calculate(textA, textB, scaleText) {
   const meters = distance * scale;
   // Compass bearing: 0 = north, 90 = east, 180 = south, 270 = west.
   const bearing = (Math.atan2(east, north) * 180 / Math.PI + 360) % 360;
-  return { dx, dy, distance, scale, meters, bearing, outOfRange: meters > L81_MAX_METERS };
+  const w = WEAPONS[weapon] || WEAPONS.mortar;
+  let rangeNote = null;
+  if (meters < w.min) rangeNote = "Too close for the " + w.name + " (minimum about " + w.min + " m). Move back.";
+  if (meters > w.max) rangeNote = "Past the " + w.name + "'s reach (about " + w.max.toLocaleString("en-US") + " m). The shell will fall short; move closer.";
+  let arc = null;
+  if (w.lowArcMin) arc = meters < w.lowArcMin ? "High arc only" : "Low or high arc";
+  return { dx, dy, distance, scale, meters, bearing, outOfRange: rangeNote !== null, rangeNote, arc };
 }
 
-// The last tick on the L81 mortar's range ladder (community guides: ~684 m).
-const L81_MAX_METERS = 684;
+// Reach of each weapon, from community guides (no official figures exist).
+const WEAPONS = {
+  mortar: { name: "L81 mortar", min: 132, max: 684 },
+  artillery: { name: "SPH-2", min: 745, max: 2660, lowArcMin: 1070 },
+};
 
 // 250.86 -> "WSW"
 function compassPoint(bearing) {
@@ -212,7 +270,7 @@ const $ = (id) => document.getElementById(id);
 const inputs = ["a", "b", "scale"].map($);
 
 function show() {
-  const r = calculate($("a").value, $("b").value, $("scale").value);
+  const r = calculate($("a").value, $("b").value, $("scale").value, weapon);
   const out = $("result");
   inputs.forEach((el) => el.removeAttribute("aria-invalid"));
   out.classList.remove("show");
@@ -229,11 +287,22 @@ function show() {
     '<div class="lbl">C · Range</div>' +
     '<div class="value">' + num + '<span>m</span></div>' +
     '<div class="dial">Dial RNG to <b>' + dialRange(r.meters) + '</b><span class="sep">·</span>Face <b>' +
-    Math.round(r.bearing) % 360 + '°</b> ' + compassPoint(r.bearing) + '</div>' +
-    (r.outOfRange ? '<div class="warn">Past the L81\'s last range tick (about ' + L81_MAX_METERS + ' m). The shell will likely fall short; move closer.</div>' : '') +
+    Math.round(r.bearing) % 360 + '°</b> ' + compassPoint(r.bearing) +
+    (r.arc && !r.outOfRange ? '<span class="sep">·</span><b>' + r.arc + '</b>' : '') + '</div>' +
+    (r.rangeNote ? '<div class="warn"></div>' : '') +
     '<div class="working">√(' + round(r.dx) + '² + ' + round(r.dy) + '²) = ' +
     round(r.distance) + ' units × ' + round(r.scale) + '</div>';
+  if (r.rangeNote) out.querySelector(".warn").textContent = r.rangeNote;
 }
+
+let weapon = "mortar";
+document.querySelectorAll(".chip").forEach((chip) =>
+  chip.addEventListener("click", () => {
+    weapon = chip.dataset.weapon;
+    document.querySelectorAll(".chip").forEach((c) => c.setAttribute("aria-pressed", String(c === chip)));
+    if ($("result").innerHTML) show();
+  })
+);
 
 $("go").addEventListener("click", show);
 inputs.forEach((el) => {

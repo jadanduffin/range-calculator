@@ -1,4 +1,4 @@
-# SPEC: Wardogs mortar range
+# SPEC: Wardogs range calculator
 
 ## 1. The problem
 In the game Wardogs I mark my mortar and a target on the map (Mark Coordinates prints x, y in chat) and need the range in meters to dial into the sight's RNG readout, without doing A² + B² = C² by hand.
@@ -34,4 +34,6 @@ When I have two points, I want to paste them and press a button, so I can get C 
 - [x] AC6: Given a result, then the page shows the whole-meter RNG to dial (example: 412).
 - [x] AC7: Given a result, then the page shows the compass bearing to face (0 = north, Y counts north) and its compass point (example: 251° WSW).
 - [x] AC8: Given a range past 684 m, then a warning says it is beyond the L81's last range tick.
+- [x] AC9: Given the weapon switch (Mortar default, or Artillery), then range warnings use that weapon's reach (L81 132–684 m, SPH-2 745–2,660 m) and say too close or too far.
+- [x] AC10: Given Artillery, then the page says whether only the high arc reaches (under ~1,070 m).
 - [x] AC5: Given a blank, zero, negative or non-number scale, then a clear error asks for a number above 0.

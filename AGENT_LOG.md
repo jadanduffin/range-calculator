@@ -34,3 +34,8 @@ Compare it with DEVLOG.md: where the two logs disagree is where you learn the mo
 - Did: Result now reads "Dial RNG to 412 · Face 251° WSW". Ranges over 684 m show an orange-dot warning. Step 05 and the compass entry explain using the Face number. 7 new tests.
 - Decided and why: Bearing uses Y = north (community guides). 684 m is the last range tick in the walkthrough guide, so it is the safe cut-off.
 - Unsure about: Y-north is unconfirmed in the game itself; the page asks the user to report if the first shot lands on the opposite side.
+
+## 2026-10-05: Artillery, weapon switch, PC layout
+- Did: Orange button now reads "Enemy range". Added a Mortar / Artillery switch; warnings follow the chosen weapon's reach, and artillery shows "High arc only" or "Low or high arc". Added an SPH-2 guide (crew, B for shells, scroll to stabilize, R then WASD prompts to reload) and a Reach section. On screens 960 px and wider the guides sit in two columns: 02 and 04 on the left, 03 and 05 on the right. 9 new tests.
+- Decided and why: The user asked for 02 left and 03 right; Reach went under 02 to keep the columns about even. User approved the weapon switch.
+- Unsure about: The vehicle is the SPH-2 self-propelled howitzer (guides call it a tank or self-propelled gun, not a truck). No guide says how to switch arcs in the game. All ranges come from player guides.

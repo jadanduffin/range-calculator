@@ -99,3 +99,36 @@ def test_example_bearing():
 def test_out_of_range_is_flagged():
     assert run_js('calculate("0, 0", "6, 0", "100")')["outOfRange"] is False
     assert run_js('calculate("0, 0", "6.9, 0", "100")')["outOfRange"] is True
+
+
+# AC9: the weapon switch sets which range limits apply.
+def at(meters, weapon):
+    """calculate() for a target `meters` due east of the gun."""
+    return run_js(f'calculate("0, 0", "{meters / 100}, 0", "100", "{weapon}")')
+
+
+def test_mortar_is_the_default_weapon():
+    assert run_js('calculate("0, 0", "6.9, 0", "100")')["outOfRange"] is True
+
+
+@pytest.mark.parametrize(
+    "meters, weapon, out_of_range",
+    [(100, "mortar", True), (400, "mortar", False), (690, "mortar", True),
+     (700, "artillery", True), (1500, "artillery", False), (2700, "artillery", True)],
+)
+def test_range_limits_per_weapon(meters, weapon, out_of_range):
+    result = at(meters, weapon)
+    assert result["outOfRange"] is out_of_range
+    assert (result["rangeNote"] is not None) is out_of_range
+
+
+def test_too_close_and_too_far_say_which():
+    assert "too close" in at(700, "artillery")["rangeNote"].lower()
+    assert "past" in at(2700, "artillery")["rangeNote"].lower()
+
+
+# AC10: artillery says which arc reaches the target.
+def test_artillery_arc_advice():
+    assert at(900, "artillery")["arc"] == "High arc only"
+    assert at(1500, "artillery")["arc"] == "Low or high arc"
+    assert at(400, "mortar")["arc"] is None
