@@ -1,7 +1,7 @@
-# SPEC: Point Distance
+# SPEC: Wardogs mortar range
 
 ## 1. The problem
-I have two x/y points and need the straight-line distance between them (A² + B² = C²) without doing the math by hand.
+In the game Wardogs I mark my mortar and a target on the map (Mark Coordinates prints x, y in chat) and need the range in meters to dial into the sight's RNG readout, without doing A² + B² = C² by hand.
 
 ## 2. The user
 Me.
@@ -31,4 +31,5 @@ When I have two points, I want to paste them and press a button, so I can get C 
 - [x] AC2: Given points pasted as `x1, y2`, `1, 2`, `1 2` or `X: 1 Y: 2`, then they are all understood.
 - [x] AC3: Given a point without exactly two numbers, then a clear error names which point is wrong.
 - [x] AC4: Given a meters-per-unit scale (default 100), then C is shown in meters to two decimals (example: 411.76 m).
+- [x] AC6: Given a result, then the page shows the whole-meter RNG to dial (example: 412).
 - [x] AC5: Given a blank, zero, negative or non-number scale, then a clear error asks for a number above 0.

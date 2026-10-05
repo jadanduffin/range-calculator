@@ -24,3 +24,8 @@ Compare it with DEVLOG.md: where the two logs disagree is where you learn the mo
 - Did: Restyled index.html: near-black ground, Schibsted Grotesk + JetBrains Mono, JD mark, mono uppercase labels, one orange primary button, hairline dividers, rise-and-fade entrance (off when reduced motion is set). Added the standard round × clear button to each point box. The field with the problem turns orange on error. Maths and tests unchanged.
 - Decided and why: Fonts and the mark are embedded inside index.html (base64) so the page stays one double-clickable file and never loads fonts from the network (design-system rule). The file is now ~480 KB, almost all fonts. Font licence copied to FONTS-LICENSE.txt as the OFL requires.
 - Unsure about: Retitled to "The distance from A to B" to avoid a one-word last line; the user may prefer other wording.
+
+## 2026-10-05: Wardogs instructions
+- Did: Researched Wardogs mortar aiming. Confirmed 1 map unit = 100 m, RNG = range in meters (left of sight), MIL = barrel elevation in mils (right; more mils = shorter shot; follows RNG automatically). Rewrote the page: gun/target labels, a 5-step how-to, a sight glossary, L81 range and hill caveats, and a "Dial RNG to 412" line (dialRange, tested).
+- Decided and why: Direction and an out-of-range warning are useful but not asked for, so they went to BACKLOG.md.
+- Unsure about: Facts come from community guides (sportskeeda, gamerant, wardogstips.wiki, wardogshub.uk), not official docs; L81 max range is quoted as ~684–700 m and is disputed.

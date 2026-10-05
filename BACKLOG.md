@@ -13,6 +13,8 @@ When you plan the next release, move the chosen ideas into docs/SPEC.md
 | Idea | Why | Added | Target |
 |---|---|---|---|
 | e.g. Filter the page by tag | Find things faster | YYYY-MM-DD | v0.2 / later / ? |
+| Direction (compass bearing) from gun to target | Range alone doesn't tell you where to face; guides say Y counts north but that needs checking in game | 2026-10-05 | ? |
+| Warn when range is past the L81's ~684–700 m reach | Saves a wasted shot | 2026-10-05 | ? |
 | Optional "third corner" and "per-axis" modes | Other readings of A²+B²=C² for points | 2026-10-05 | ? |
 
 ## Done or dropped

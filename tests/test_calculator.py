@@ -71,3 +71,9 @@ def test_scale_can_change():
 def test_bad_scale_gives_error_message(scale):
     result = run_js(f'calculate("0, 0", "3, 4", {json.dumps(scale)})')
     assert "meters per unit" in result["error"].lower()
+
+
+# AC6: the page tells you the whole-meter RNG to dial in the game.
+def test_rng_to_dial_is_whole_meters():
+    assert run_js("dialRange(411.7596)") == 412
+    assert run_js("dialRange(411.4)") == 411
