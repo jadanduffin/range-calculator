@@ -61,3 +61,6 @@ Compare it with DEVLOG.md: where the two logs disagree is where you learn the mo
 - Did: Under 640 px wide, each point shows two boxes (X, Y) with the number keypad instead of one paste box. Enter jumps box to box and calculates at the end. Comma decimals accepted (joinPoint, tested). Phone and PC boxes stay in sync. Phone errors say "needs a number in both X and Y" and flag only the empty box. Step 01 mentions the phone boxes. PC unchanged.
 - Decided and why: Phone boxes use 16 px text so iPhones don't zoom in when you tap them.
 - Unsure about: The iPhone number keypad has no minus key, so negative coordinates can't be typed on iPhone. Wardogs coordinates seen so far are all positive.
+
+## 2026-10-05: Removed the meters-per-unit box
+- Did: Removed the box; the page always uses 100 m per map unit (confirmed by guides). calculate() keeps its scale input so existing tests still cover the maths. Intro now says "Enter" instead of "Paste" so it fits phones.
