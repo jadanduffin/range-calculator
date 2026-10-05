@@ -39,3 +39,7 @@ Compare it with DEVLOG.md: where the two logs disagree is where you learn the mo
 - Did: Orange button now reads "Enemy range". Added a Mortar / Artillery switch; warnings follow the chosen weapon's reach, and artillery shows "High arc only" or "Low or high arc". Added an SPH-2 guide (crew, B for shells, scroll to stabilize, R then WASD prompts to reload) and a Reach section. On screens 960 px and wider the guides sit in two columns: 02 and 04 on the left, 03 and 05 on the right. 9 new tests.
 - Decided and why: The user asked for 02 left and 03 right; Reach went under 02 to keep the columns about even. User approved the weapon switch.
 - Unsure about: The vehicle is the SPH-2 self-propelled howitzer (guides call it a tank or self-propelled gun, not a truck). No guide says how to switch arcs in the game. All ranges come from player guides.
+
+## 2026-10-05: Aiming feedback
+- Did: No page change. User clarified aiming: put the target on the vertical crosshair line, and above or below center is fine. User chose to keep step order and test the compass Face number tomorrow; the visual-check rewrite is parked in BACKLOG.md.
+- Unsure about: Whether Y counts north (drives the Face number). Waiting on the user's in-game test.

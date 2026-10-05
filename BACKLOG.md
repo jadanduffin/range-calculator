@@ -13,6 +13,7 @@ When you plan the next release, move the chosen ideas into docs/SPEC.md
 | Idea | Why | Added | Target |
 |---|---|---|---|
 | e.g. Filter the page by tag | Find things faster | YYYY-MM-DD | v0.2 / later / ? |
+| If the Face compass number proves wrong in game: rewrite step 05 so the main method is lining the target up on the vertical crosshair line (above or below center is fine), with the compass as a check | User to test the compass on 2026-10-06 | 2026-10-05 | pending test |
 | Optional "third corner" and "per-axis" modes | Other readings of A²+B²=C² for points | 2026-10-05 | ? |
 
 ## Done or dropped
