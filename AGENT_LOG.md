@@ -47,3 +47,7 @@ Compare it with DEVLOG.md: where the two logs disagree is where you learn the mo
 ## 2026-10-05: "Your gun" → "Your position"
 - Did: Replaced every "gun" on the page with "your position" (title, intro, A label, step 01, step 03). Crew wording ("gunner") left as is.
 - Decided and why: The user had asked for this in the previous message and I misread it as a step-order request. Owned the mistake and fixed it.
+
+## 2026-10-05: Humanizer pass on page wording
+- Did: Applied blader/humanizer rules (not installed on the account; read from GitHub) to all page text. 9 edits: plainer intro, removed "tell me" and "I couldn't find" (my own voice leaking into a page other players read), dropped decorative bold, replaced an unsourced claim ("the closer you mark, the closer the shell lands") with a factual one, and made the untested compass caveat tell the reader what to do.
+- Unsure about: Step 03 uses A and B for both the points and the triangle's sides (A² + B² = C²). It's the user's formula, but could confuse readers. Mentioned to the user.
