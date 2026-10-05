@@ -22,7 +22,7 @@ When I have two points, I want to paste them and press a button, so I can get C 
 ## 6. Decision table
 | Point A text | Point B text | Expected result |
 |---|---|---|
-| two numbers | two numbers | C = √(Δx² + Δy²) |
+| two numbers | two numbers | C = √(Δx² + Δy²) × meters per unit |
 | not two numbers | anything | "Point A needs exactly two numbers…" |
 | two numbers | not two numbers | "Point B needs exactly two numbers…" |
 
@@ -30,3 +30,5 @@ When I have two points, I want to paste them and press a button, so I can get C 
 - [x] AC1: Given A = x98.42, y110.38 and B = x94.53, y109.03, when I press Calculate, then C ≈ 4.1176.
 - [x] AC2: Given points pasted as `x1, y2`, `1, 2`, `1 2` or `X: 1 Y: 2`, then they are all understood.
 - [x] AC3: Given a point without exactly two numbers, then a clear error names which point is wrong.
+- [x] AC4: Given a meters-per-unit scale (default 100), then C is shown in meters to two decimals (example: 411.76 m).
+- [x] AC5: Given a blank, zero, negative or non-number scale, then a clear error asks for a number above 0.

@@ -28,12 +28,14 @@
 <body>
 <main>
   <h1>Point Distance</h1>
-  <p class="sub">Paste two points. C is the straight-line distance between them (A² + B² = C²).</p>
+  <p class="sub">Paste two points. C is the straight-line distance between them in meters (A² + B² = C²).</p>
   <div class="card">
     <label for="a">Point A</label>
     <input id="a" value="x98.42, y110.38" placeholder="x98.42, y110.38">
     <label for="b">Point B</label>
     <input id="b" value="x94.53, y109.03" placeholder="x94.53, y109.03">
+    <label for="scale">Meters per unit</label>
+    <input id="scale" value="100" inputmode="decimal">
     <button id="go">Calculate C</button>
     <div id="result" aria-live="polite"></div>
   </div>
@@ -50,14 +52,24 @@ function parsePoint(text) {
 
 // Pythagoras: the gaps across (x) and up (y) are the two short sides,
 // so the distance between the points is the long side C.
-function calculate(textA, textB) {
+function calculate(textA, textB, scaleText) {
   const a = parsePoint(textA);
   if (!a) return { error: "Point A needs exactly two numbers, like x98.42, y110.38" };
   const b = parsePoint(textB);
   if (!b) return { error: "Point B needs exactly two numbers, like x94.53, y109.03" };
+  const scale = Number(String(scaleText).trim());
+  if (String(scaleText).trim() === "" || !(scale > 0)) {
+    return { error: "Meters per unit needs a number above 0, like 100" };
+  }
   const dx = Math.abs(a.x - b.x);
   const dy = Math.abs(a.y - b.y);
-  return { dx, dy, distance: Math.sqrt(dx * dx + dy * dy) };
+  const distance = Math.sqrt(dx * dx + dy * dy);
+  return { dx, dy, distance, scale, meters: distance * scale };
+}
+
+// 411.7596 -> "411.76 m"
+function formatMeters(meters) {
+  return meters.toFixed(2) + " m";
 }
 </script>
 
@@ -65,7 +77,11 @@ function calculate(textA, textB) {
 const round = (n) => Number(n.toFixed(4)).toString();
 
 function show() {
-  const r = calculate(document.getElementById("a").value, document.getElementById("b").value);
+  const r = calculate(
+    document.getElementById("a").value,
+    document.getElementById("b").value,
+    document.getElementById("scale").value
+  );
   const out = document.getElementById("result");
   if (r.error) {
     out.innerHTML = '<div class="error"></div>';
@@ -73,8 +89,9 @@ function show() {
     return;
   }
   out.innerHTML =
-    '<div class="answer">C = ' + round(r.distance) + '</div>' +
-    '<div class="working">√(' + round(r.dx) + '² + ' + round(r.dy) + '²)</div>';
+    '<div class="answer">C = ' + formatMeters(r.meters) + '</div>' +
+    '<div class="working">√(' + round(r.dx) + '² + ' + round(r.dy) + '²) = ' +
+    round(r.distance) + ' units × ' + round(r.scale) + ' m</div>';
 }
 
 document.getElementById("go").addEventListener("click", show);

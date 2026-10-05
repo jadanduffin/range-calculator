@@ -4,6 +4,7 @@
 | # | Step | Satisfies AC | Test that proves it |
 |---|---|---|---|
 | 1 | Single-file index.html with parsePoint + calculate | AC1–AC3 | tests/test_calculator.py |
+| 2 | Meters output with editable meters-per-unit scale | AC4–AC5 | tests/test_calculator.py |
 
 ## Risks the critique found
 | Risk | What we changed |
