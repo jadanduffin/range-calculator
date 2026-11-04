@@ -1,9 +1,9 @@
-# Range Calculator
+# Wardogs Range Calculator
 
 A small Windows app for the game Wardogs. Paste your map position and the target's (from **Mark Coordinates** in chat), press **Enemy range**, and it tells you the RNG and compass heading (FACE) to set on the L81 mortar or SPH-2 artillery sight. Pick Mortar or Artillery at the top; **HOW TO** shows the steps for the weapon you picked.
 
 ## Install
-Grab `RangeCalculator-Setup.exe` from the latest [release](https://github.com/jadanduffin/coordinates-web-app/releases/latest). It asks for admin, defaults to Program Files (any folder works), and adds Start Menu and Desktop shortcuts plus an uninstaller.
+Grab `RangeCalculator-Setup.exe` from the latest [release](https://github.com/jadanduffin/wardogs-range-calculator/releases/latest). It asks for admin, defaults to Program Files (any folder works), and adds Start Menu and Desktop shortcuts plus an uninstaller.
 
 Windows may show "Windows protected your PC" because the installer is not code-signed. Click **More info**, then **Run anyway**.
 
