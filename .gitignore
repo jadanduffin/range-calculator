@@ -9,3 +9,7 @@ venv/
 # Claude: personal files, never shared
 .claude/settings.local.json
 CLAUDE.local.md
+
+# Build output and generated previews
+dist/
+src/icon_preview.png

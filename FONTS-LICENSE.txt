@@ -1,0 +1,13 @@
+The fonts in this folder - Schibsted Grotesk and JetBrains Mono - are
+licensed under the SIL Open Font License, Version 1.1.
+
+Read from each font's own name table, not assumed:
+  "This Font Software is licensed under the SIL Open Font License,
+   Version 1.1. This license is available with a FAQ at:
+   https://scripts.sil.org/OFL"
+
+Full text: https://scripts.sil.org/OFL
+
+They are bundled so the app looks like itself on a machine that does
+not have them installed. They may be used and redistributed with this
+software; they may not be sold on their own.

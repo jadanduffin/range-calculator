@@ -1,48 +1,33 @@
-# Project template: spec-first agentic development
+# Range Calculator
 
-A starting point for any project built with an AI agent. Every project runs
-the same loop, and every file here supports one stage of it:
+A small Windows app for the game Wardogs. Paste your map position and the target's (from **Mark Coordinates** in chat), press **Enemy range**, and it tells you the RNG and compass heading (FACE) to set on the L81 mortar or SPH-2 artillery sight. Pick Mortar or Artillery at the top; **HOW TO** shows the steps for the weapon you picked.
 
-    SPEC  ->  PLAN  ->  TESTS  ->  BUILD  ->  REVIEW  ->  RELEASE
+## Install
+Grab `RangeCalculator-Setup.exe` from the latest [release](https://github.com/jadanduffin/coordinates-web-app/releases/latest). It asks for admin, defaults to Program Files (any folder works), and adds Start Menu and Desktop shortcuts plus an uninstaller.
 
-## Starting a project
+Windows may show "Windows protected your PC" because the installer is not code-signed. Click **More info**, then **Run anyway**.
 
-| Situation | Do this |
-|---|---|
-| Brand-new project | `gh repo create my-project --template jadanduffin/project-template --private --clone` |
-| Existing project | Open it in Claude Code and run `/adopt-workflow` |
+## Updates
+On launch the app checks the latest GitHub release. If it is newer, a `v1.x available · UPDATE` row appears; UPDATE downloads the new setup and runs it.
 
-Then fill in the top of `CLAUDE.md` and write `docs/SPEC.md` before any code.
-First time on a new machine? See SETUP.md.
+## Folders
+- `src\` — `RangeCalculator.pyw` (the app), `rangecalc.py` (the maths), icons, `fonts\` (Schibsted Grotesk + JetBrains Mono, SIL OFL), `make_icon.py` (redraws the icon)
+- `tests\` — `test_rangecalc.py` (the app's maths) and `test_calculator.py` (the web page's maths); one checks the other
+- `installer\` — Inno Setup script
+- `index.html` — the same calculator as a web page, for phones
+- `dist\` — build output: `RangeCalculator.exe` (portable) and `RangeCalculator-Setup.exe` (installer). Not in git.
 
-## What's in here
+## Release a new version
+Bump `VERSION` in `src\RangeCalculator.pyw` and merge to `main`. GitHub builds the installer on Windows and publishes the release (`.github/workflows/release.yml`).
 
-| File | What it's for | Fill it in |
-|---|---|---|
-| `CLAUDE.md` | Standing instructions for your AI agent | First |
-| `docs/SPEC.md` | What you're building and why | Before any code |
-| `docs/ARCHITECTURE.md` | Modules, interfaces, invariants | After the spec |
-| `docs/PLAN.md` | The approved build plan | After the architecture |
-| `tests/` | One test per acceptance criterion | Before building each step |
-| `BACKLOG.md` | Parking lot for ideas meant for later releases | Whenever an idea pops up |
-| `DEVLOG.md` | YOUR journal: decisions and lessons | End of every session |
-| `AGENT_LOG.md` | The AGENT's journal: what it did and why | After every task |
-| `docs/FUNDAMENTALS.md` | Principles, vocabulary, stack choices | Any time |
-| `SETUP.md` | Install the tools on a new machine | Once per machine |
-| `.github/workflows/tests.yml` | Runs your tests on GitHub on every push (CI) | Already on |
+To build on your own PC instead:
+```
+powershell -File build.ps1 -Release
+```
+That runs the tests, builds both exes and publishes a GitHub release tagged `v<VERSION>` with the setup attached. Installed copies see it on their next launch.
 
-## Not a Python project?
+Needs Python 3.14 with pytest + PyInstaller, Inno Setup 6 (`winget install JRSoftware.InnoSetup`) and a logged-in `gh`. To redraw the icon, also install Pillow and run `python src\make_icon.py`.
 
-The workflow files above work for anything. The Python starter is optional.
-Delete these, then set the test and run commands in `CLAUDE.md` and `tests.yml`:
+Settings (last points and weapon) live in `%APPDATA%\RangeCalculator.json`.
 
-`pyproject.toml`, `.python-version`, `src/`, `tests/test_setup.py`
-
-## Everyday commands (Python starter)
-
-| Command | What it does |
-|---|---|
-| `uv run pytest` | Run all tests |
-| `uv run python -m app` | Run your project (once it exists) |
-| `uv add <package>` | Add a library (ask yourself first: do I need it?) |
-| `uv run smoke_test.py` | Check this machine is set up |
+The project-template notes this repo started from are in `docs/TEMPLATE.md`.
