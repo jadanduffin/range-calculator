@@ -76,3 +76,7 @@ Compare it with DEVLOG.md: where the two logs disagree is where you learn the mo
 
 ## 2026-11-04: Repo renamed
 - Did: Repo renamed to jadanduffin/wardogs-range-calculator and made public by the user. Updated REPO in the app and README links, bumped to 1.1 so installed copies pick up the new name.
+
+## 2026-11-04: Match AutoClicker 1.6 (v1.2)
+- Did: Fixed window width (460 px) on every view and weapon; Mortar/Artillery switch also on the How to view; picked weapon is an orange pill; orange hover stroke on every button; view titles in Schibsted Grotesk ExtraBold 14, sentence case; Enemy range is AutoClicker's glowing primary pill (60 px, ExtraBold 22). Version 1.2.
+- Unsure about: AutoClicker itself cannot run here (Windows only), so the match is from its code, not a side-by-side screenshot.
