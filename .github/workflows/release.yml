@@ -35,6 +35,12 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           $ver = (Select-String -Path src/RangeCalculator.pyw -Pattern 'RANGECALC_VERSION", "([\d.]+)"').Matches[0].Groups[1].Value
-          gh release view "v$ver" *> $null
-          if ($LASTEXITCODE -eq 0) { "v$ver already released"; exit 0 }
-          gh release create "v$ver" dist/RangeCalculator-Setup.exe --title "Range Calculator $ver" --generate-notes --target $env:GITHUB_SHA
+          $assets = gh release view "v$ver" --json assets,isDraft 2>$null | ConvertFrom-Json
+          if (-not $assets) {
+            gh release create "v$ver" dist/RangeCalculator-Setup.exe --title "Range Calculator $ver" --generate-notes --target $env:GITHUB_SHA
+          } elseif (-not ($assets.assets.name -contains "RangeCalculator-Setup.exe") -or $assets.isDraft) {
+            # a release left half-made (e.g. GitHub returned an error mid-upload): finish it instead of skipping it
+            gh release upload "v$ver" dist/RangeCalculator-Setup.exe --clobber
+            gh release edit "v$ver" --draft=false
+          } else { "v$ver already released"; exit 0 }
+          if ($LASTEXITCODE) { exit 1 }
