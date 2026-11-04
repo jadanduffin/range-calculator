@@ -5,6 +5,7 @@
 |---|---|---|---|
 | 1 | Single-file index.html with parsePoint + calculate | AC1–AC3 | tests/test_calculator.py |
 | 2 | Meters output with editable meters-per-unit scale | AC4–AC5 | tests/test_calculator.py |
+| 3 | Windows desktop app (tkinter, like AutoClicker): src/rangecalc.py maths, src/RangeCalculator.pyw window, crosshair icon, build.ps1 + Inno Setup installer, GitHub release + update check | AC1–AC3, AC7, AC9–AC10, AC12 | tests/test_rangecalc.py |
 
 ## Risks the critique found
 | Risk | What we changed |

@@ -68,3 +68,8 @@ Compare it with DEVLOG.md: where the two logs disagree is where you learn the mo
 ## 2026-10-05: Published as a private link
 - Did: Renamed the page title to "Wardogs Range Calculator", set color-scheme: dark, and published a copy without the outer html/head/body wrapper (the publishing service adds its own) at https://claude.ai/artifact/EN8FSC17mcHVnXy2E1iZm9 (private). index.html keeps its wrapper so it still opens by double-click.
 - Unsure about: The publish copy lives in the session scratchpad; to republish after future edits, rebuild it from index.html with the same steps.
+
+## 2026-11-04: Windows desktop app + installer
+- Did: Rebuilt the calculator as a native Windows app modelled on jadanduffin/AutoClicker: tkinter window (src/RangeCalculator.pyw), maths in src/rangecalc.py (27 new tests, one checks it matches the web page), crosshair icon drawn by src/make_icon.py from the user's reference in #FB4B1D, brand fonts bundled and loaded privately on Windows, HOW TO view showing only the selected weapon's steps, last points/weapon remembered, update check against GitHub releases. build.ps1 + installer/RangeCalculator.iss mirror AutoClicker's. README is now the app's download page; the template README moved to docs/TEMPLATE.md.
+- Decided and why: tkinter (no new runtime dependency, same as AutoClicker). The user builds on their PC with build.ps1 -Release, as they chose. Kept index.html for phones.
+- Unsure about: The Windows .exe and installer could not be built here (Linux). PyInstaller packaging was checked on Linux and the packaged app ran. Private font loading (AddFontResourceExW) and the dark title bar are Windows-only and untested here. The repo is private, so releases and the update check won't work for others until it is made public.
