@@ -18,8 +18,9 @@ On launch the app checks the latest GitHub release. If it is newer, a `v1.x avai
 - `dist\` — build output: `RangeCalculator.exe` (portable) and `RangeCalculator-Setup.exe` (installer). Not in git.
 
 ## Release a new version
-1. Bump `VERSION` in `src\RangeCalculator.pyw`.
-2. Commit, then:
+Bump `VERSION` in `src\RangeCalculator.pyw` and merge to `main`. GitHub builds the installer on Windows and publishes the release (`.github/workflows/release.yml`).
+
+To build on your own PC instead:
 ```
 powershell -File build.ps1 -Release
 ```
