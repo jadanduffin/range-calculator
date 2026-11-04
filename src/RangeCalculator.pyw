@@ -5,7 +5,7 @@ import ctypes, json, os, shutil, subprocess, sys, threading, tkinter as tk, tkin
 
 from rangecalc import calculate, compass_point
 
-VERSION = os.environ.get("RANGECALC_VERSION", "1.1")  # build.ps1 reads this number; the env override only lets the update test pretend to be old
+VERSION = os.environ.get("RANGECALC_VERSION", "1.2")  # build.ps1 reads this number; the env override only lets the update test pretend to be old
 REPO = "jadanduffin/wardogs-range-calculator"  # GitHub releases are checked on launch for a newer RangeCalculator-Setup.exe
 REPO_URL = f"https://github.com/{REPO}"
 WINDOWS = sys.platform == "win32"
@@ -46,7 +46,8 @@ root.update()
 if WINDOWS:
     ctypes.windll.dwmapi.DwmSetWindowAttribute(ctypes.windll.user32.GetParent(root.winfo_id()), 20, ctypes.byref(ctypes.c_int(1)), 4)  # dark title bar
 
-WIDTH = 380  # content width; text wraps to it
+WIDTH = 380  # text wraps to this
+APP_W = 460  # the window is this wide on every view and weapon, so nothing jumps when you switch
 
 def label(parent, text, **kw):
     kw = {"font": (MONO, 9), "fg": MUTED2, "bg": parent.cget("bg"), "anchor": "w", "justify": "left", **kw}
@@ -61,9 +62,14 @@ class Button(tk.Canvas):  # the design system's pill button: raised fill, hairli
         self.text, self.cmd, self.fg, self.fill, self.outline = text, cmd, fg, bg, outline
         self.font, self.h, self.full = font, height, full
         self.bind("<Button-1>", lambda _: self.cmd and self.cmd())
+        self.bind("<Enter>", lambda _: self.hover(ACCENT))  # the stroke goes orange under the pointer
+        self.bind("<Leave>", lambda _: self.hover(self.outline))
         if full:
             self.bind("<Configure>", lambda _: self.draw())
         self.draw()
+    def hover(self, color):
+        self.itemconfig("arc", outline=color)  # arcs colour by outline=, lines by fill=; a line given outline= errors and stops the update
+        self.itemconfig("edge", fill=color)
     def config(self, **kw):  # text / fg / fill / outline / cursor
         self.text, self.fg = kw.pop("text", self.text), kw.pop("fg", self.fg)
         self.fill, self.outline = kw.pop("bg", self.fill), kw.pop("outline", self.outline)
@@ -77,10 +83,10 @@ class Button(tk.Canvas):  # the design system's pill button: raised fill, hairli
         for box in ((1, 1, 1 + d, 1 + d), (w - 1 - d, 1, w - 1, 1 + d)):
             self.create_oval(*box, fill=self.fill, outline=self.fill)
         self.create_rectangle(1 + d / 2, 1, w - 1 - d / 2, 1 + d, fill=self.fill, outline=self.fill)
-        self.create_arc(1, 1, 1 + d, 1 + d, start=90, extent=180, style="arc", outline=self.outline)
-        self.create_arc(w - 1 - d, 1, w - 1, 1 + d, start=-90, extent=180, style="arc", outline=self.outline)
+        self.create_arc(1, 1, 1 + d, 1 + d, start=90, extent=180, style="arc", outline=self.outline, tags="arc")
+        self.create_arc(w - 1 - d, 1, w - 1, 1 + d, start=-90, extent=180, style="arc", outline=self.outline, tags="arc")
         for y in (1, 1 + d):
-            self.create_line(1 + d / 2, y, w - 1 - d / 2, y, fill=self.outline)
+            self.create_line(1 + d / 2, y, w - 1 - d / 2, y, fill=self.outline, tags="edge")
         self.create_text(w / 2, h / 2, text=self.text, font=self.font, fill=self.fg)
 button = Button
 
@@ -88,7 +94,7 @@ def open_repo():
     webbrowser.open(REPO_URL)
 
 images = []  # tk drops an image that nothing in Python references, so keep every one
-def header(parent, name, right_text, right_cmd, outline=LINE):
+def header(parent, name, right_text, right_cmd):
     head = tk.Frame(parent, bg=INK)
     head.pack(fill="x")
     try:
@@ -98,31 +104,60 @@ def header(parent, name, right_text, right_cmd, outline=LINE):
         logo.bind("<Button-1>", lambda _: open_repo())
     except Exception:
         pass  # shortcut: no icon file, skip the mark
-    title = label(head, name, cursor="hand2")
-    title.pack(side="left")
-    title.bind("<Button-1>", lambda _: open_repo())
-    button(head, right_text, right_cmd, outline=outline).pack(side="right")
+    label(head, name, font=(SANS_BLACK, 14), fg=FG).pack(side="left")  # the view's title: brand display face, sentence case
+    button(head, right_text, right_cmd).pack(side="right")
+
+def mix(a, b, t):  # blend two hex colours; the canvas has no alpha, so the glow is painted as opaque rings
+    return "#%02x%02x%02x" % tuple(round(int(a[i:i + 2], 16) * (1 - t) + int(b[i:i + 2], 16) * t) for i in (1, 3, 5))
+
+class GlowButton(tk.Canvas):  # the one orange fill per view: AutoClicker's primary pill with its orange-tinted glow
+    GLOW, H = 20, 60  # glow reach, pill height (same as AutoClicker's state bar)
+    def __init__(self, parent, text, cmd):
+        super().__init__(parent, width=100, height=self.H + 2 * self.GLOW, bg=INK, highlightthickness=0, cursor="hand2")
+        self.text, self.cmd = text, cmd
+        self.bind("<Configure>", lambda _: self.draw())
+        self.bind("<Button-1>", lambda _: self.cmd())
+    def pill(self, x0, y0, x1, y1, color):
+        d = y1 - y0
+        self.create_oval(x0, y0, x0 + d, y1, fill=color, outline=color)
+        self.create_oval(x1 - d, y0, x1, y1, fill=color, outline=color)
+        self.create_rectangle(x0 + d / 2, y0, x1 - d / 2, y1, fill=color, outline=color)
+    def draw(self):
+        self.delete("all")
+        g, w = self.GLOW, self.winfo_width()
+        x0, y0, x1, y1 = g, g, w - g, g + self.H
+        for k in range(g, 0, -1):  # faint outer ring first, brightening towards the pill: peaks near 15% orange
+            self.pill(x0 - k, y0 - k, x1 + k, y1 + k, mix(INK, ACCENT, 0.16 * (1 - k / g) ** 2))
+        self.pill(x0, y0, x1, y1, ACCENT)
+        self.create_text(w / 2, y0 + self.H / 2, text=self.text, font=(SANS_BLACK, 22), fill=INK)  # ink text on orange
 
 # ---------- main view ----------
 main = tk.Frame(root, bg=INK, padx=24, pady=20)
-header(main, "RANGE CALCULATOR", "HOW TO", lambda: show(guide), outline=ACCENT)
+header(main, "Range Calculator", "HOW TO", lambda: show(guide))
 
-weapon_row = tk.Frame(main, bg=INK)
-weapon_row.pack(fill="x", pady=(22, 0))
-label(weapon_row, "WEAPON").pack(side="left")
-chips = {}
-for key in ("artillery", "mortar"):  # packed right to left
-    chips[key] = button(weapon_row, key.upper(), lambda k=key: pick_weapon(k))
-    chips[key].pack(side="right", padx=(6, 0))
+chips = []  # (weapon, button) on both views, so the switch reads the same everywhere
+def weapon_row(parent):
+    row = tk.Frame(parent, bg=INK)
+    row.pack(fill="x", pady=(22, 0))
+    label(row, "WEAPON").pack(side="left")
+    for key in ("artillery", "mortar"):  # packed right to left
+        chip = button(row, key.upper(), lambda k=key: pick_weapon(k))
+        chip.pack(side="right", padx=(6, 0))
+        chips.append((key, chip))
 
 def pick_weapon(key):
     settings["weapon"] = key
-    for k, chip in chips.items():
+    for k, chip in chips:
         on = k == key
-        chip.config(fg=FG if on else MUTED, bg=INK2 if on else INK, outline="#4A4B4F" if on else LINE)
+        chip.config(fg=INK if on else MUTED, bg=ACCENT if on else INK2, outline=ACCENT if on else LINE)  # the picked weapon is brand orange
     save_settings()
+    if current is guide:
+        build_guide()
     if result_shown:
         work()
+    fit()
+
+weapon_row(main)
 
 rule(main, 18, 14)
 
@@ -142,8 +177,8 @@ def field(parent, caption, key):
 box_a = field(main, "A · YOUR POSITION · X, Y", "a")
 box_b = field(main, "B · TARGET · X, Y", "b")
 
-go = button(main, "Enemy range  →", lambda: work(), fg=INK, bg=ACCENT, outline=ACCENT, font=(SANS_MED, 11), height=42, full=True)
-go.pack(fill="x", pady=(4, 0))
+go = GlowButton(main, "Enemy range  →", lambda: work())
+go.pack(fill="x", pady=(0, 0))
 
 # result: hidden until the first calculation
 result = tk.Frame(main, bg=INK)
@@ -188,6 +223,7 @@ def work():
         error_line.config(text=r.error)
         error_line.pack(fill="x", pady=(18, 0))
         result_shown = False
+        fit()
         return
     rng_big.config(text=str(r.rng)); rng_unit.config(text="m")
     face_big.config(text=f"{r.face}°"); face_unit.config(text=compass_point(r.bearing))
@@ -201,10 +237,12 @@ def work():
     working.pack(fill="x", pady=(8, 0))
     result.pack(fill="x")
     result_shown = True
+    fit()
 
 # ---------- how-to view (only the notes for the weapon you picked) ----------
 guide = tk.Frame(root, bg=INK, padx=24, pady=20)
-header(guide, "HOW TO", "BACK", lambda: show(main))
+header(guide, "How to", "BACK", lambda: show(main))
+weapon_row(guide)  # switch weapons here too; the steps below follow
 guide_body = tk.Frame(guide, bg=INK)
 guide_body.pack(fill="x")
 
@@ -320,9 +358,11 @@ def show(view):
     view.pack(fill="x")
     if view is main and latest:
         upd_row.pack(side="bottom", fill="x")
+    fit()
 
-for frame in (main, guide):
-    tk.Frame(frame, bg=INK, width=WIDTH, height=0).pack()  # holds both views at the same width
+def fit():  # fixed width, height follows the content
+    root.update_idletasks()
+    root.geometry(f"{APP_W}x{root.winfo_reqheight()}")
 
 pick_weapon(settings["weapon"])
 show(main)
