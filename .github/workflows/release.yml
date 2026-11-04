@@ -35,12 +35,19 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           $ver = (Select-String -Path src/RangeCalculator.pyw -Pattern 'RANGECALC_VERSION", "([\d.]+)"').Matches[0].Groups[1].Value
-          $assets = gh release view "v$ver" --json assets,isDraft 2>$null | ConvertFrom-Json
-          if (-not $assets) {
-            gh release create "v$ver" dist/RangeCalculator-Setup.exe --title "Range Calculator $ver" --generate-notes --target $env:GITHUB_SHA
-          } elseif (-not ($assets.assets.name -contains "RangeCalculator-Setup.exe") -or $assets.isDraft) {
-            # a release left half-made (e.g. GitHub returned an error mid-upload): finish it instead of skipping it
-            gh release upload "v$ver" dist/RangeCalculator-Setup.exe --clobber
-            gh release edit "v$ver" --draft=false
-          } else { "v$ver already released"; exit 0 }
-          if ($LASTEXITCODE) { exit 1 }
+          # GitHub's release API sometimes answers 502; try a few times, finishing a half-made release if one was left behind
+          foreach ($try in 1..5) {
+            $rel = gh release view "v$ver" --json assets,isDraft 2>$null | ConvertFrom-Json
+            if ($rel -and ($rel.assets.name -contains "RangeCalculator-Setup.exe") -and -not $rel.isDraft) { "v$ver released"; exit 0 }
+            if (-not $rel) {
+              gh release create "v$ver" dist/RangeCalculator-Setup.exe --title "Range Calculator $ver" --notes "Download RangeCalculator-Setup.exe below." --target $env:GITHUB_SHA
+            } else {
+              gh release upload "v$ver" dist/RangeCalculator-Setup.exe --clobber
+              gh release edit "v$ver" --draft=false
+            }
+            "attempt $try did not finish; waiting"
+            Start-Sleep -Seconds (15 * $try)
+          }
+          $rel = gh release view "v$ver" --json assets,isDraft 2>$null | ConvertFrom-Json
+          if ($rel -and ($rel.assets.name -contains "RangeCalculator-Setup.exe") -and -not $rel.isDraft) { "v$ver released"; exit 0 }
+          exit 1
