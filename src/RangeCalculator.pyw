@@ -5,7 +5,7 @@ import ctypes, json, os, shutil, subprocess, sys, threading, tkinter as tk, tkin
 
 from rangecalc import calculate, compass_point
 
-VERSION = os.environ.get("RANGECALC_VERSION", "1.3")  # build.ps1 reads this number; the env override only lets the update test pretend to be old
+VERSION = os.environ.get("RANGECALC_VERSION", "1.4")  # build.ps1 reads this number; the env override only lets the update test pretend to be old
 REPO = "jadanduffin/wardogs-range-calculator"  # GitHub releases are checked on launch for a newer RangeCalculator-Setup.exe
 REPO_URL = f"https://github.com/{REPO}"
 WINDOWS = sys.platform == "win32"

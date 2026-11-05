@@ -32,7 +32,7 @@ ring(d, 335, 62, gaps=(0, 90, 180, 270), gap_deg=2 * math.degrees(math.asin(58 /
 
 # four bars: from just outside the dashed ring to past the outer ring
 for a in (0, 90, 180, 270):
-    dx, dy = math.cos(math.radians(a)), math.sin(math.radians(a))
+    dx, dy = round(math.cos(math.radians(a))), round(math.sin(math.radians(a)))  # exact 0 or 1: cos(90) is 6e-17, which counted as "not zero" and stretched the bars
     x0, y0, x1, y1 = C + dx * px(155), C + dy * px(155), C + dx * px(420), C + dy * px(420)
     w = px(38)
     d.rectangle((min(x0, x1) - (w if dy else 0), min(y0, y1) - (w if dx else 0),

@@ -83,3 +83,7 @@ Compare it with DEVLOG.md: where the two logs disagree is where you learn the mo
 
 ## 2026-11-05: Match AutoClicker 1.7 (v1.3)
 - Did: Icon on a rounded ink tile (22% radius, art at 68%) with thicker crosshair lines; header mark crops the tile margin by 14% like AutoClicker; Enter-range glow peak 0.16 -> 0.20 (25% brighter, same as AutoClicker 1.7). Version 1.3.
+
+## 2026-11-05: Centre the icon (v1.4)
+- Did: cos(90°) is 6e-17, which the bar code treated as non-zero, so the top, bottom and left bars were drawn 38 px longer and the mark sat 7.7 px off centre. Rounded the direction to exact 0/1. Measured every size: equal margins on all sides, centre within 1 px. Version 1.4.
+- Decided and why: The user asked to see and approve changes before anything is pushed or released. From now on: check (measure, not just look), show, wait for OK, then push.
