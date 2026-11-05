@@ -3,9 +3,10 @@
 # Styled to Jadan Duffin's design system (ink ground, one orange, Schibsted Grotesk + JetBrains Mono).
 import ctypes, json, os, shutil, subprocess, sys, threading, tkinter as tk, tkinter.font as tkfont, urllib.request, webbrowser
 
+from pill import pill_image
 from rangecalc import calculate, compass_point
 
-VERSION = os.environ.get("RANGECALC_VERSION", "1.5")  # build.ps1 reads this number; the env override only lets the update test pretend to be old
+VERSION = os.environ.get("RANGECALC_VERSION", "1.6")  # build.ps1 reads this number; the env override only lets the update test pretend to be old
 REPO = "jadanduffin/wardogs-range-calculator"  # GitHub releases are checked on launch for a newer RangeCalculator-Setup.exe
 REPO_URL = f"https://github.com/{REPO}"
 WINDOWS = sys.platform == "win32"
@@ -67,9 +68,9 @@ class Button(tk.Canvas):  # the design system's pill button: raised fill, hairli
         if full:
             self.bind("<Configure>", lambda _: self.draw())
         self.draw()
-    def hover(self, color):
-        self.itemconfig("arc", outline=color)  # arcs colour by outline=, lines by fill=; a line given outline= errors and stops the update
-        self.itemconfig("edge", fill=color)
+    def hover(self, color):  # swap to the pill drawn with that stroke colour
+        self.hovering = color == ACCENT
+        self.itemconfig("pill", image=self.imgs[self.hovering])
     def config(self, **kw):  # text / fg / fill / outline / cursor
         self.text, self.fg = kw.pop("text", self.text), kw.pop("fg", self.fg)
         self.fill, self.outline = kw.pop("bg", self.fill), kw.pop("outline", self.outline)
@@ -77,16 +78,12 @@ class Button(tk.Canvas):  # the design system's pill button: raised fill, hairli
         self.draw()
     def draw(self):
         self.delete("all")
-        h = self.h; d = h - 2
+        h = self.h
         w = max(self.winfo_width(), 40) if self.full else tkfont.Font(font=self.font).measure(self.text) + 30
         tk.Canvas.config(self, height=h, **({} if self.full else {"width": w}))
-        for box in ((1, 1, 1 + d, 1 + d), (w - 1 - d, 1, w - 1, 1 + d)):
-            self.create_oval(*box, fill=self.fill, outline=self.fill)
-        self.create_rectangle(1 + d / 2, 1, w - 1 - d / 2, 1 + d, fill=self.fill, outline=self.fill)
-        self.create_arc(1, 1, 1 + d, 1 + d, start=90, extent=180, style="arc", outline=self.outline, tags="arc")
-        self.create_arc(w - 1 - d, 1, w - 1, 1 + d, start=-90, extent=180, style="arc", outline=self.outline, tags="arc")
-        for y in (1, 1 + d):
-            self.create_line(1 + d / 2, y, w - 1 - d / 2, y, fill=self.outline, tags="edge")
+        ground = self.cget("bg")
+        self.imgs = [smooth_pill(w, h, fill=self.fill, bg=ground, stroke=edge) for edge in (self.outline, ACCENT)]  # normal, hover
+        self.create_image(0, 0, image=self.imgs[getattr(self, "hovering", False)], anchor="nw", tags="pill")
         self.create_text(w / 2, h / 2, text=self.text, font=self.font, fill=self.fg)
 button = Button
 
@@ -105,8 +102,12 @@ def header(parent, name, right_text, right_cmd):
     label(head, name, font=(SANS_BLACK, 14), fg=FG).pack(side="left")  # the view's title: brand display face, sentence case
     button(head, right_text, right_cmd).pack(side="right")
 
-def mix(a, b, t):  # blend two hex colours; the canvas has no alpha, so the glow is painted as opaque rings
-    return "#%02x%02x%02x" % tuple(round(int(a[i:i + 2], 16) * (1 - t) + int(b[i:i + 2], 16) * t) for i in (1, 3, 5))
+pill_cache = {}  # a pill is only drawn once per size and colours; tk needs a reference kept to every image anyway
+def smooth_pill(w, h, **kw):
+    key = (w, h, tuple(sorted(kw.items())))
+    if key not in pill_cache:
+        pill_cache[key] = pill_image(tk, w, h, **kw)
+    return pill_cache[key]
 
 class GlowButton(tk.Canvas):  # the one orange fill per view: AutoClicker's primary pill with its orange-tinted glow
     GLOW, H = 20, 60  # glow reach, pill height (same as AutoClicker's state bar)
@@ -115,19 +116,15 @@ class GlowButton(tk.Canvas):  # the one orange fill per view: AutoClicker's prim
         self.text, self.cmd = text, cmd
         self.bind("<Configure>", lambda _: self.draw())
         self.bind("<Button-1>", lambda _: self.cmd())
-    def pill(self, x0, y0, x1, y1, color):
-        d = y1 - y0
-        self.create_oval(x0, y0, x0 + d, y1, fill=color, outline=color)
-        self.create_oval(x1 - d, y0, x1, y1, fill=color, outline=color)
-        self.create_rectangle(x0 + d / 2, y0, x1 - d / 2, y1, fill=color, outline=color)
     def draw(self):
         self.delete("all")
         g, w = self.GLOW, self.winfo_width()
-        x0, y0, x1, y1 = g, g, w - g, g + self.H
-        for k in range(g, 0, -1):  # faint outer ring first, brightening towards the pill: peaks near 24% orange
-            self.pill(x0 - k, y0 - k, x1 + k, y1 + k, mix(INK, ACCENT, 0.24 * (1 - k / g) ** 2))
-        self.pill(x0, y0, x1, y1, ACCENT)
-        self.create_text(w / 2, y0 + self.H / 2, text=self.text, font=(SANS_BLACK, 22), fill=INK)  # ink text on orange
+        if w < 2 * g + self.H:
+            return  # not laid out yet
+        # orange pill with a glow fading out over g px: peaks near 24% orange right at the edge
+        self.img = smooth_pill(w, self.H + 2 * g, fill=ACCENT, bg=INK, glow=(ACCENT, 0.24, g), inset=g)
+        self.create_image(0, 0, image=self.img, anchor="nw")
+        self.create_text(w / 2, g + self.H / 2, text=self.text, font=(SANS_BLACK, 22), fill=INK)  # ink text on orange
 
 # ---------- main view ----------
 main = tk.Frame(root, bg=INK, padx=24, pady=20)

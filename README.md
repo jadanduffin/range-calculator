@@ -11,7 +11,7 @@ Windows may show "Windows protected your PC" because the installer is not code-s
 On launch the app checks the latest GitHub release. If it is newer, a `v1.x available · UPDATE` row appears; UPDATE downloads the new setup and runs it.
 
 ## Folders
-- `src\` — `RangeCalculator.pyw` (the app), `rangecalc.py` (the maths), icons, `fonts\` (Schibsted Grotesk + JetBrains Mono, SIL OFL), `make_icon.py` (redraws the icon)
+- `src\` — `RangeCalculator.pyw` (the app), `rangecalc.py` (the maths), `pill.py` (smooth button shapes), icons, `fonts\` (Schibsted Grotesk + JetBrains Mono, SIL OFL), `make_icon.py` (redraws the icon)
 - `tests\` — `test_rangecalc.py` (the app's maths) and `test_calculator.py` (the web page's maths); one checks the other
 - `installer\` — Inno Setup script
 - `index.html` — the same calculator as a web page, for phones
