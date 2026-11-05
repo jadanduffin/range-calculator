@@ -80,3 +80,6 @@ Compare it with DEVLOG.md: where the two logs disagree is where you learn the mo
 ## 2026-11-04: Match AutoClicker 1.6 (v1.2)
 - Did: Fixed window width (460 px) on every view and weapon; Mortar/Artillery switch also on the How to view; picked weapon is an orange pill; orange hover stroke on every button; view titles in Schibsted Grotesk ExtraBold 14, sentence case; Enemy range is AutoClicker's glowing primary pill (60 px, ExtraBold 22). Version 1.2.
 - Unsure about: AutoClicker itself cannot run here (Windows only), so the match is from its code, not a side-by-side screenshot.
+
+## 2026-11-05: Match AutoClicker 1.7 (v1.3)
+- Did: Icon on a rounded ink tile (22% radius, art at 68%) with thicker crosshair lines; header mark crops the tile margin by 14% like AutoClicker; Enter-range glow peak 0.16 -> 0.20 (25% brighter, same as AutoClicker 1.7). Version 1.3.
