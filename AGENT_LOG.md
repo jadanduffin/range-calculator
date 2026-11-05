@@ -90,3 +90,7 @@ Compare it with DEVLOG.md: where the two logs disagree is where you learn the mo
 
 ## 2026-11-05: v1.5
 - Did: Header icon no longer opens GitHub (VIEW SOURCE on How to still does). Glow peak 0.20 -> 0.24 (20% brighter; measured 4 px above the pill: red 39 -> 45). Before/after shown and approved by the user before pushing.
+
+## 2026-11-05: Smooth pills (v1.6)
+- Did: Tk canvas curves are not anti-aliased, so pills and strokes were jagged. New src/pill.py shades each pixel by coverage (pure Python, tested in tests/test_pill.py); all buttons, the hover stroke and the glowing Enemy range pill use it. Glow strength unchanged within ~5%. Approved by the user before pushing. Version 1.6.
+- Unsure about: AutoClicker has the same jagged edges; user wants it noted for that project.
