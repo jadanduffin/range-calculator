@@ -87,3 +87,6 @@ Compare it with DEVLOG.md: where the two logs disagree is where you learn the mo
 ## 2026-11-05: Centre the icon (v1.4)
 - Did: cos(90°) is 6e-17, which the bar code treated as non-zero, so the top, bottom and left bars were drawn 38 px longer and the mark sat 7.7 px off centre. Rounded the direction to exact 0/1. Measured every size: equal margins on all sides, centre within 1 px. Version 1.4.
 - Decided and why: The user asked to see and approve changes before anything is pushed or released. From now on: check (measure, not just look), show, wait for OK, then push.
+
+## 2026-11-05: v1.5
+- Did: Header icon no longer opens GitHub (VIEW SOURCE on How to still does). Glow peak 0.20 -> 0.24 (20% brighter; measured 4 px above the pill: red 39 -> 45). Before/after shown and approved by the user before pushing.

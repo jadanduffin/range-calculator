@@ -5,7 +5,7 @@ import ctypes, json, os, shutil, subprocess, sys, threading, tkinter as tk, tkin
 
 from rangecalc import calculate, compass_point
 
-VERSION = os.environ.get("RANGECALC_VERSION", "1.4")  # build.ps1 reads this number; the env override only lets the update test pretend to be old
+VERSION = os.environ.get("RANGECALC_VERSION", "1.5")  # build.ps1 reads this number; the env override only lets the update test pretend to be old
 REPO = "jadanduffin/wardogs-range-calculator"  # GitHub releases are checked on launch for a newer RangeCalculator-Setup.exe
 REPO_URL = f"https://github.com/{REPO}"
 WINDOWS = sys.platform == "win32"
@@ -99,9 +99,7 @@ def header(parent, name, right_text, right_cmd):
     head.pack(fill="x")
     try:
         images.append(tk.PhotoImage(file=os.path.join(HERE, "icon-56.png")).subsample(2))
-        logo = tk.Label(head, image=images[-1], bg=INK, cursor="hand2")
-        logo.pack(side="left", padx=(0, 10))
-        logo.bind("<Button-1>", lambda _: open_repo())
+        tk.Label(head, image=images[-1], bg=INK).pack(side="left", padx=(0, 10))  # just the mark; VIEW SOURCE on How to opens GitHub
     except Exception:
         pass  # shortcut: no icon file, skip the mark
     label(head, name, font=(SANS_BLACK, 14), fg=FG).pack(side="left")  # the view's title: brand display face, sentence case
@@ -126,8 +124,8 @@ class GlowButton(tk.Canvas):  # the one orange fill per view: AutoClicker's prim
         self.delete("all")
         g, w = self.GLOW, self.winfo_width()
         x0, y0, x1, y1 = g, g, w - g, g + self.H
-        for k in range(g, 0, -1):  # faint outer ring first, brightening towards the pill: peaks near 20% orange (AutoClicker 1.7)
-            self.pill(x0 - k, y0 - k, x1 + k, y1 + k, mix(INK, ACCENT, 0.20 * (1 - k / g) ** 2))
+        for k in range(g, 0, -1):  # faint outer ring first, brightening towards the pill: peaks near 24% orange
+            self.pill(x0 - k, y0 - k, x1 + k, y1 + k, mix(INK, ACCENT, 0.24 * (1 - k / g) ** 2))
         self.pill(x0, y0, x1, y1, ACCENT)
         self.create_text(w / 2, y0 + self.H / 2, text=self.text, font=(SANS_BLACK, 22), fill=INK)  # ink text on orange
 
