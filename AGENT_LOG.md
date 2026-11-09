@@ -94,3 +94,8 @@ Compare it with DEVLOG.md: where the two logs disagree is where you learn the mo
 ## 2026-11-05: Smooth pills (v1.6)
 - Did: Tk canvas curves are not anti-aliased, so pills and strokes were jagged. New src/pill.py shades each pixel by coverage (pure Python, tested in tests/test_pill.py); all buttons, the hover stroke and the glowing Enemy range pill use it. Glow strength unchanged within ~5%. Approved by the user before pushing. Version 1.6.
 - Unsure about: AutoClicker has the same jagged edges; user wants it noted for that project.
+
+## 2026-11-08 · 1.7: version in the corner
+- Added v1.7 at 9px, faint grey, bottom-right of the window; placed on top so nothing moves; hidden while the update stripe shows. Same corner number as Shot Tracker and AutoClicker (Jadan's request, 9px his pick).
+- Checked: 73 tests pass; a picture of the window shows it in the corner, clear of the formula line.
+

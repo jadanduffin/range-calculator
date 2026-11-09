@@ -6,7 +6,7 @@ import ctypes, json, os, shutil, subprocess, sys, threading, tkinter as tk, tkin
 from pill import pill_image
 from rangecalc import calculate, compass_point
 
-VERSION = os.environ.get("RANGECALC_VERSION", "1.6")  # build.ps1 reads this number; the env override only lets the update test pretend to be old
+VERSION = os.environ.get("RANGECALC_VERSION", "1.7")  # build.ps1 reads this number; the env override only lets the update test pretend to be old
 REPO = "jadanduffin/wardogs-range-calculator"  # GitHub releases are checked on launch for a newer RangeCalculator-Setup.exe
 REPO_URL = f"https://github.com/{REPO}"
 WINDOWS = sys.platform == "win32"
@@ -310,6 +310,9 @@ upd_btn = button(upd_row, "UPDATE", lambda: install_update(), fg=FG, bg=INK)
 upd_btn.pack(side="right")
 latest = {}
 
+# version, bottom-right corner, 9px; placed on top so nothing moves; show() hides it under the stripe
+ver = tk.Label(root, text=f"v{VERSION}", font=(MONO, -9), fg=MUTED2, bg=INK, bd=0, padx=0, pady=0)
+
 def install_update():
     upd_btn.config(text="DOWNLOADING", fg=MUTED, cursor="arrow")
     upd_btn.cmd = None
@@ -353,6 +356,10 @@ def show(view):
     view.pack(fill="x")
     if view is main and latest:
         upd_row.pack(side="bottom", fill="x")
+        ver.place_forget()  # the stripe already names the versions
+    else:
+        ver.place(relx=1, rely=1, anchor="se", x=-14, y=-8)
+        ver.lift()
     fit()
 
 def fit():  # fixed width, height follows the content
