@@ -99,3 +99,6 @@ Compare it with DEVLOG.md: where the two logs disagree is where you learn the mo
 - Added v1.7 at 9px, faint grey, bottom-right of the window; placed on top so nothing moves; hidden while the update stripe shows. Same corner number as Shot Tracker and AutoClicker (Jadan's request, 9px his pick).
 - Checked: 73 tests pass; a picture of the window shows it in the corner, clear of the formula line.
 
+
+## 2026-11-13: Repo renamed to range-calculator (v1.8)
+- Did: User renamed the repo to jadanduffin/range-calculator. Pointed the update check and README link at it; checked the releases API answers under the new name. Version 1.8, approved before pushing.
